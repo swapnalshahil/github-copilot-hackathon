@@ -1,0 +1,23 @@
+# Ignore Node.js build artifacts
+node_modules/
+
+# Ignore production build of React app
+/frontend/build/
+
+# Ignore environment-specific configuration files
+/frontend/.env
+
+# Ignore logs and other generated files
+/backend/logs/
+/backend/*.log
+
+# Ignore editor and IDE files
+.vscode/
+.idea/
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore package lock files
+package-lock.json
+yarn.lock

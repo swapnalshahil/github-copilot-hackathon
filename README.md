@@ -1,1 +1,1 @@
-# GitHub-Copilot-Hackathon
+# Github Copilot Hackathon
