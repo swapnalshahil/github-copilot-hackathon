@@ -1,0 +1,29 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "finance tracker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "watch": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swapnalshahil/github-copilot-hackathon.git"
+  },
+  "keywords": [
+    "hackathon"
+  ],
+  "author": "meow",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/swapnalshahil/github-copilot-hackathon/issues"
+  },
+  "homepage": "https://github.com/swapnalshahil/github-copilot-hackathon#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
