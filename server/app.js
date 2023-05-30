@@ -4,7 +4,7 @@ const userRoute = require('./routes/users/userRoutes');
 const app = express();
 
 
-app.use(logger);
+// app.use(logger);
 
 // routes
 // app.post('/register' , registerUser)
