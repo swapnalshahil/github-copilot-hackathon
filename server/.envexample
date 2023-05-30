@@ -1,0 +1,3 @@
+GOOGLE_CLIENT_ID= 1038966924413-4shii5mnpq7rlf10237cogn077v0c0hb.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET= 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
+GOOGLE_CALLBACK_URL= http://localhost:1337/api/sessions/oauth/google
