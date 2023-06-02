@@ -8,6 +8,7 @@ import Bargraphs from './components/Charts/Bargraphs';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LandinPage from './components/LandingPage';
 import TransactionPage from './components/TransactionPage';
+import Signup from './components/Signup';
 
 
 
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<LandinPage />} />
         <Route path="/transaction" element={<TransactionPage />} />
         <Route path="/analytics" element={<Bargraphs />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
     
