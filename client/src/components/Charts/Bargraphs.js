@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { CDBContainer } from 'cdbreact';
+import Navbar from '../Navbar/NavBar';
 // import {CategoryScale} from 'chart.js'; 
 // Chart.register(CategoryScale);
 import Chart from 'chart.js/auto';
@@ -24,12 +25,15 @@ const Chart1 = () => {
   });
 
   return (
+    <>
+    <Navbar></Navbar>
     <CDBContainer>
       <h3 className="mt-5">Line chart</h3>
       <Line data={data} options={{ responsive: true }} />
       <br />
       <br /><br /><br /><br /><br /><br /><br />
     </CDBContainer>
+    </>
   );
 };
 
