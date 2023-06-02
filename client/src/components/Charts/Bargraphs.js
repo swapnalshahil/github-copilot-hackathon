@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { CDBContainer } from 'cdbreact';
 import Navbar from '../Navbar/NavBar';
+import Categorizedexpenses from './Categorizedexpenses';
 // import {CategoryScale} from 'chart.js'; 
 // Chart.register(CategoryScale);
 import Chart from 'chart.js/auto';
@@ -28,11 +29,13 @@ const Chart1 = () => {
     <>
     <Navbar></Navbar>
     <CDBContainer>
-      <h3 className="mt-5">Line chart</h3>
+      <h3 className="mt-5">Cashflow Chart</h3>
       <Line data={data} options={{ responsive: true }} />
       <br />
-      <br /><br /><br /><br /><br /><br /><br />
+      
     </CDBContainer>
+    <Categorizedexpenses></Categorizedexpenses>
+    <br /><br /><br /><br /><br /><br /><br />
     </>
   );
 };
