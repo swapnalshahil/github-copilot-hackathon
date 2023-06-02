@@ -1,10 +1,11 @@
 
-import React from 'react';
-import useAuth from '../hooks/useAuth';
+import React, { useContext } from 'react';
 import {MDBContainer, MDBCol, MDBRow, MDBBtn, MDBIcon, MDBInput, MDBCheckbox } from 'mdb-react-ui-kit';
-import Signup from './Signup';
+import { AuthContext } from '../contexts/authContextProvider';
+import { Navigate } from 'react-router-dom';
 function Login() {
-    const [user, login, logout] = useAuth();
+    const {user, login} = useContext(AuthContext);
+    if(user) return <Navigate to="/"/>
     return (
         // <div>
         //     <h2>React Google Login</h2>
@@ -44,7 +45,7 @@ function Login() {
               <MDBIcon fab icon='facebook-f' />
             </MDBBtn>
 
-            <MDBBtn floating size='md' tag='a'  className='me-2'>
+            <MDBBtn floating size='md' tag='a'  className='me-2' onClick={login}>
               <MDBIcon fab icon='google' />
             </MDBBtn>
 

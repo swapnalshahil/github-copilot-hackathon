@@ -74,10 +74,13 @@
 //   );
 // }
 
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/authContextProvider";
 
 const Navbar = () => {
+  const {user, logout} = useContext(AuthContext);
+  console.log(user);
   return (
     <nav className="bg-blue-500 py-4 px-6">
       <div className="container mx-auto flex items-center justify-between">
@@ -114,6 +117,14 @@ const Navbar = () => {
             >
               Profile
             </Link>
+          </li>
+          <li>
+            <button
+              onClick={logout}
+              className="text-white hover:text-gray-300 transition duration-300"
+            >
+              Logout
+            </button>
           </li>
         </ul>
       </div>
