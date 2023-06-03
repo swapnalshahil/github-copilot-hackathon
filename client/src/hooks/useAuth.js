@@ -5,6 +5,7 @@ import axios from 'axios';
 const useAuth = () => {
     const [userToken, setUserToken] = useState(localStorage.getItem('access_token'));
     const [user, setUser] = useState(null);
+    const [jwtToken, setJWTToken] = useState(null)
 
     const login = useGoogleLogin({
         onSuccess: (codeResponse) => {
@@ -24,8 +25,14 @@ const useAuth = () => {
                             Accept: 'application/json'
                         }
                     })
-                    .then((res) => {
+                    .then(async (res) => {
                         setUser(res.data);
+                        console.log(res.data);
+                        const tokenResponse = await axios.post('http://localhost:4000/login', {
+                            email: res.data.email
+                        })
+                        const token = tokenResponse.data;
+                        setJWTToken(token);
                     })
                     .catch((err) => console.log(err));
             }
@@ -37,9 +44,10 @@ const useAuth = () => {
         localStorage.removeItem('access_token');
         setUser(null);
         setUserToken(null);
+        setJWTToken(null);
     };
 
-    return {user, login, logout};
+    return {user, login, logout,jwtToken};
 }
 
 export default useAuth;

@@ -3,10 +3,13 @@ const path = require("path");
 const passport = require("passport");
 const session = require("express-session");
 const userRoute = require("./routes/users/userRoutes");
+const { isAuthenticated } = require('./middlewares/auth')
+var cors = require('cors')
 require("./GoogleOAuth");
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -45,9 +48,8 @@ app.get(
   })
 );
 
-app.get("/auth/protected", isLoggedIn, (req, res) => {
-  let username = req.user.displayName;
-  res.send(`Welcome ${username}`);
+app.get("/auth/protected", isAuthenticated, (req, res) => {
+  res.send(`Welcome bro`);
 });
 
 app.get("/auth/google/failure", (req, res) => {

@@ -1,6 +1,6 @@
 const Users = require("../Schemas/UserSchema");
 
-const createNewUser = (details) => {
+const createNewUser = async (details) => {
     const user = new Users();
     Object.entries(details).forEach(([key, value]) => {
         if (key in user) {
