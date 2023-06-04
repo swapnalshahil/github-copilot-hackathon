@@ -1,62 +1,93 @@
-import React, {Components, useContext} from "react";
-import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
-import {FaFacebook, FaTwitter, FaInstagram, FaRupeeSign} from "react-icons/fa"
-import {AuthContext} from "../../contexts/authContextProvider"
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+import {
+  MDBCol,
+  MDBContainer,
+  MDBRow,
+  MDBCard,
+  MDBCardText,
+  MDBCardBody,
+  MDBCardImage,
+  MDBBtn,
+  MDBTypography,
+} from "mdb-react-ui-kit";
+import { FaRupeeSign } from "react-icons/fa";
+import { AuthContext } from "../../contexts/authContextProvider";
+import Navbar from "../Navbar/NavBar";
+
 export default function ProfileStatistics() {
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+
   return (
-    <div className="vh-100" style={{ backgroundColor: '#eee' }}>
-      <MDBContainer className="container py-5 h-100">
-        <MDBRow className="justify-content-center align-items-center h-100">
-          <MDBCol md="12" xl="4">
-            <MDBCard style={{ borderRadius: '15px' }}>
-              <MDBCardBody className="text-center">
-                <div className="mt-3 mb-4 flex w-full justify-center">
-                  <MDBCardImage src={user.picture}
-                    className="rounded-circle" fluid style={{ width: '100px' }} />
-                </div>
-                <MDBTypography tag="h4">{user.name}</MDBTypography>
-                <MDBCardText className="text-muted mb-4">
-                  @Occupation <span className="mx-2">|</span> <a href="#!">{user.email}</a>
-                </MDBCardText>
-                <div className="mb-4 pb-2">
-                  <MDBBtn outline floating>
-                  {/* <mdb-icon fab icon="android"></mdb-icon> */}
-                    {/* <MDBIcon fab icon="facebook" size="lg" /> */}
-                    {/* <FontAwesomeIcon icon="fa-brands fa-facebook" /> */}
-                    <FaFacebook/>
-                  </MDBBtn>
-                  <MDBBtn outline floating className="mx-1">
-                    {/* <MDBIcon fab icon="twitter" size="lg" /> */}
-                    <FaTwitter></FaTwitter>
-                  </MDBBtn>
-                  <MDBBtn outline floating>
-                    {/* <MDBIcon fab icon="skype" size="lg" /> */}
-                    <FaInstagram/>
-                  </MDBBtn>
-                </div>
-                <MDBBtn rounded size="lg">
-                  Analyse Transactions 
-                </MDBBtn>
-                <div className="d-flex justify-content-between text-center mt-5 mb-2">
-                  <div>
-                    <MDBCardText className="mb-1 h5"><FaRupeeSign/>8471</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">Current Balance</MDBCardText>
+    <>
+      <Navbar />
+      <div
+        className="vh-100 d-flex align-items-center justify-content-center"
+        style={{ backgroundColor: "#eee" }}
+      >
+        <MDBContainer className="py-2">
+          <MDBRow className="justify-content-center">
+            <MDBCol md="12" xl="10" lg="10">
+              <MDBCard
+                className="p-3"
+                style={{ borderRadius: "15px", color: "#333" }}
+              >
+                <MDBCardBody className="text-center items-center">
+                  <div className="mt-3 mb-4 d-flex justify-content-center align-items-center">
+                    <MDBCardImage
+                      src={user.picture}
+                      className="rounded-circle"
+                      fluid
+                      style={{ width: "100px" }}
+                    />
                   </div>
-                  <div className="px-3">
-                    <MDBCardText className="mb-1 h5">8512</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">Last Month's Transaction</MDBCardText>
+
+                  <MDBTypography tag="h4">{user.name}</MDBTypography>
+                  <MDBCardText className="text-muted mb-3">
+                    {user.company || "Company Name"}
+                  </MDBCardText>
+                  <MDBCardText className="mb-4">{user.bio}</MDBCardText>
+                  <div className="mb-4 d-flex flex-column align-items-center justify-content-center">
+                    <div className="d-flex align-items-center">
+                      <FaRupeeSign className="mr-2" />
+                      <MDBCardText className="mb-1 h5">
+                        {user.currency} {user.balance || 0}
+                      </MDBCardText>
+                    </div>
+                    <MDBCardText className="small text-muted mb-0 text-center">
+                      Current Balance
+                    </MDBCardText>
                   </div>
-                  <div>
-                    <MDBCardText className="mb-1 h5">4751</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">Total Transactions</MDBCardText>
+
+                  <Link to="/transaction">
+                    <MDBBtn rounded size="lg" className="mb-4" tag="button">
+                      Analyze Transactions
+                    </MDBBtn>
+                  </Link>
+                  <div className="d-flex justify-content-between text-center mt-3">
+                    <div>
+                      <MDBCardText className="mb-1 h5">
+                        {user.lastMonthTransaction || 0}
+                      </MDBCardText>
+                      <MDBCardText className="small text-muted mb-0">
+                        Last Month's Transaction
+                      </MDBCardText>
+                    </div>
+                    <div>
+                      <MDBCardText className="mb-1 h5">
+                        {user.totalTransactions || 0}
+                      </MDBCardText>
+                      <MDBCardText className="small text-muted mb-0">
+                        Total Transactions
+                      </MDBCardText>
+                    </div>
                   </div>
-                </div>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
-    </div>
+                </MDBCardBody>
+              </MDBCard>
+            </MDBCol>
+          </MDBRow>
+        </MDBContainer>
+      </div>
+    </>
   );
 }

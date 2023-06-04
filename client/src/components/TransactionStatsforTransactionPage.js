@@ -1,44 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../contexts/authContextProvider";
+import axios from "axios";
 
 const TransactionStats = () => {
-  const [transactions, setTransactions] = useState([
-    // Transaction data
-        {
-          id: 1,
-          date: "2010-01-01",
-          description: "Transaction 1",
-          amount: 100,
-          currency: "USD",
-          type: "add",
-        },
-        {
-          id: 2,
-          date: "2022-01-02",
-          description: "Transaction 2",
-          amount: 200,
-          currency: "EUR",
-          type: "subtract",
-        },
-        {
-          id: 3,
-          date: "2023-01-03",
-          description: "Transaction 3",
-          amount: 300,
-          currency: "GBP",
-          type: "add",
-        },
-        {
-          id: 4,
-          date: "2023-01-02",
-          description: "Transaction 4",
-          amount: 200,
-          currency: "INR",
-          type: "add",
-        },
-  ]);
+  const [transactions, setTransactions] = useState([]);
   const [expandedTransactionId, setExpandedTransactionId] = useState(null);
   const [filterType, setFilterType] = useState("all");
   const [sortOption, setSortOption] = useState("none");
+
+  const { user, jwtToken } = useContext(AuthContext);
+  console.log(user)
+  useEffect(() => {
+    if(user && jwtToken){
+      //api update need to be done
+      axios.get(`http://localhost:4000/getexpensebyid/${user.id}`, {
+        headers: {
+          Authorization: jwtToken,
+          Accept: "application/json",
+        }
+      })
+      .then((res) => {
+        console.log(res.data);
+        setTransactions(res.data);
+      })
+      .catch((err) => console.log(err));
+    }
+  })
 
   const handleTransactionClick = (transactionId) => {
     setExpandedTransactionId(
@@ -160,3 +147,39 @@ const TransactionStats = () => {
 export default TransactionStats;
 
 
+
+
+
+// Transaction data
+        // {
+        //   id: 1,
+        //   date: "2010-01-01",
+        //   description: "Transaction 1",
+        //   amount: 100,
+        //   currency: "USD",
+        //   type: "add",
+        // },
+        // {
+        //   id: 2,
+        //   date: "2022-01-02",
+        //   description: "Transaction 2",
+        //   amount: 200,
+        //   currency: "EUR",
+        //   type: "subtract",
+        // },
+        // {
+        //   id: 3,
+        //   date: "2023-01-03",
+        //   description: "Transaction 3",
+        //   amount: 300,
+        //   currency: "GBP",
+        //   type: "add",
+        // },
+        // {
+        //   id: 4,
+        //   date: "2023-01-02",
+        //   description: "Transaction 4",
+        //   amount: 200,
+        //   currency: "INR",
+        //   type: "add",
+        // },
