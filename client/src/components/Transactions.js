@@ -1,44 +1,44 @@
 
 import React, { useState } from 'react';
-
+import { FaTrash, FaPenSquare } from "react-icons/fa";
 const TransactionList = () => {
   const [expandedTransactionId, setExpandedTransactionId] = useState(null);
-      const transactions = [
-        {
-          id: 1,
-          date: "2010-01-01",
-          description: "Transaction 1",
-          amount: 100,
-          currency: "USD",
-          type: "add",
-        },
-        {
-          id: 2,
-          date: "2022-01-02",
-          description: "Transaction 2",
-          amount: 200,
-          currency: "EUR",
-          type: "subtract",
-        },
-        {
-          id: 3,
-          date: "2023-01-03",
-          description: "Transaction 3",
-          amount: 300,
-          currency: "GBP",
-          type: "add",
-        },
-        {
-          id: 4,
-          date: "2023-01-02",
-          description: "Transaction 4",
-          amount: 200,
-          currency: "INR",
-          type: "add",
-        },
+  const transactions = [
+    {
+      id: 1,
+      date: "2010-01-01",
+      description: "Transaction 1",
+      amount: 100,
+      currency: "USD",
+      type: "add",
+    },
+    {
+      id: 2,
+      date: "2022-01-02",
+      description: "Transaction 2",
+      amount: 200,
+      currency: "EUR",
+      type: "subtract",
+    },
+    {
+      id: 3,
+      date: "2023-01-03",
+      description: "Transaction 3",
+      amount: 300,
+      currency: "GBP",
+      type: "add",
+    },
+    {
+      id: 4,
+      date: "2023-01-02",
+      description: "Transaction 4",
+      amount: 200,
+      currency: "INR",
+      type: "add",
+    },
 
-        
-      ];
+
+  ];
 
   const handleTransactionClick = (transactionId) => {
     if (expandedTransactionId === transactionId) {
@@ -75,6 +75,10 @@ const TransactionList = () => {
                     <div className="p-4 bg-white">
                       <p>Additional details:</p>
                       <p>{transaction.additionalDetails}</p>
+                      <div>
+                        <a href='#'><FaPenSquare style={{ fontSize: '25px'}} /></a>
+                        <a href='#'><FaTrash style={{ fontSize: '25px' }} /></a>
+                      </div>
                     </div>
                   </td>
                 </tr>

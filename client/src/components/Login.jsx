@@ -36,26 +36,40 @@ function Login() {
         <br/>
         <br/>
         <MDBCol col='4' md='6'>
+        <MDBCol md='12' className='text-center text-md-start d-flex flex-column justify-content-center'>
 
+          <h1 className="my-5 display-3 fw-bold ls-tight px-3">
+            Track your<br />
+            <span className="text-primary">Finance with us</span>
+          </h1>
+
+          {/* <p className='px-3' style={{color: 'hsl(217, 10%, 50.8%)'}}>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Eveniet, itaque accusantium odio, soluta, corrupti aliquam
+            quibusdam tempora at cupiditate quis eum maiores libero
+            veritatis? Dicta facilis sint aliquid ipsum atque?
+          </p> */}
+
+        </MDBCol>
           <div className="d-flex flex-row align-items-center justify-content-center">
 
-            <p className="lead fw-normal mb-0 me-3">Sign in with</p>
+            {/* <p className="lead fw-normal mb-0 me-3">Sign in with</p> */}
 
-            <MDBBtn floating size='md' tag='a' className='me-2'>
+            {/* <MDBBtn floating size='md' tag='a' className='me-2'>
               <MDBIcon fab icon='facebook-f' />
-            </MDBBtn>
+            </MDBBtn> */}
 
-            <MDBBtn floating size='md' tag='a'  className='me-2' onClick={login}>
-              <MDBIcon fab icon='google' />
-            </MDBBtn>
-
-            <MDBBtn floating size='md' tag='a'  className='me-2'>
+            {/* <MDBBtn floating size='md' tag='a'  className='me-2' onClick={login}> */}
+              {/* <MDBIcon fab icon='google' /> */}
+            {/* </MDBBtn> */}
+            <MDBBtn className="mb-0 px-5" size='lg' onClick={login}>Sign-in with Google</MDBBtn>
+            {/* <MDBBtn floating size='md' tag='a'  className='me-2'>
               <MDBIcon fab icon='linkedin-in' />
-            </MDBBtn>
+            </MDBBtn> */}
 
           </div>
 
-          <div className="divider d-flex align-items-center my-4">
+          {/* <div className="divider d-flex align-items-center my-4">
             <p className="text-center fw-bold mx-3 mb-0">Or</p>
           </div>
 
@@ -70,11 +84,11 @@ function Login() {
           <div className='text-center text-md-start mt-4 pt-2'>
             <MDBBtn className="mb-0 px-5" size='lg'>Login</MDBBtn>
             <p className="small fw-bold mt-2 pt-1 mb-2">Don't have an account? <a href="/signup" className="link-danger">Register</a></p>
-          </div>
+          </div>*/}
         <br/>
         <br/>
         <br/>
-        <br/>
+        <br/> 
 
         </MDBCol>
 
