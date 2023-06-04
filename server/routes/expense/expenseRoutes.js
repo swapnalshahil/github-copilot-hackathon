@@ -1,16 +1,15 @@
 const express = require("express");
 const {
-  createNewExpense,
-  getExpenseById,
-  deleteExpenseById,
-  updateExpenseDetails,
+  createTransaction,
+  updateTransaction,
+  deleteTransaction,
 } = require("../../controllers/expense/expensecontrol");
+const {isAuthenticated} = require('../../middlewares/auth')
 
-const expenseRoute = express.Router();
+const transactionRoute = express.Router();
 
-expenseRoute.post("/createnewexpense", createNewExpense);
-expenseRoute.get("/getexpensebyid/:id", getExpenseById);
-expenseRoute.delete("/deleteexpensebyid/:id", deleteExpenseById);
-expenseRoute.put("/updateexpensedetails/:id", updateExpenseDetails);
+transactionRoute.post("/create",isAuthenticated, createTransaction);
+transactionRoute.delete("/delete/:id",isAuthenticated, deleteTransaction);
+transactionRoute.put("/update/:id",isAuthenticated, updateTransaction);
 
-module.exports = expenseRoute;
+module.exports = transactionRoute;

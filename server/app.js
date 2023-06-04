@@ -3,6 +3,7 @@ const path = require("path");
 const passport = require("passport");
 const session = require("express-session");
 const userRoute = require("./routes/users/userRoutes");
+const transactionRoute = require('./routes/expense/expenseRoutes');
 const { isAuthenticated } = require('./middlewares/auth')
 var cors = require('cors')
 require("./GoogleOAuth");
@@ -33,6 +34,7 @@ app.use(passport.session());
 
 // Routes
 app.use("/", userRoute);
+app.use("/transaction", transactionRoute)
 
 // Google authentication routes
 app.get(
