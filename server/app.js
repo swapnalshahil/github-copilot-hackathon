@@ -49,6 +49,7 @@ app.get(
 );
 
 app.get("/auth/protected", isAuthenticated, (req, res) => {
+  console.log(req.user);
   res.send(`Welcome bro`);
 });
 

@@ -4,7 +4,6 @@ import {FaFacebook, FaTwitter, FaInstagram, FaRupeeSign} from "react-icons/fa"
 import {AuthContext} from "../../contexts/authContextProvider"
 export default function ProfileStatistics() {
   const {user} = useContext(AuthContext);
-  console.log(user);
   return (
     <div className="vh-100" style={{ backgroundColor: '#eee' }}>
       <MDBContainer className="container py-5 h-100">

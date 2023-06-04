@@ -3,7 +3,6 @@ const {createNewUser, findUserByEmail} = require('../../Repository/UserRepositor
 // Register
 const loginUser = async (req, res) => {
   const {email} = req?.body;
-  console.log(req.body);
   try {
     // logic to check if user exists then throw error
     // else do registeration
@@ -12,7 +11,11 @@ const loginUser = async (req, res) => {
     if(!userExist) {
       createNewUser({email});
     }
-    const token = jwt.sign(email, jwtSecret);
+    const token = jwt.sign({
+     data: email,
+     exp: Math.floor(Date.now() / 1000) + (60 * 60), // expires in 1 hour
+    }, jwtSecret);
+    
     res.status(200).json(token)
 
   } catch (error) {
