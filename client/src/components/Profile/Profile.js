@@ -1,7 +1,10 @@
-import React, {Components} from "react";
+import React, {Components, useContext} from "react";
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
 import {FaFacebook, FaTwitter, FaInstagram, FaRupeeSign} from "react-icons/fa"
+import {AuthContext} from "../../contexts/authContextProvider"
 export default function ProfileStatistics() {
+  const {user} = useContext(AuthContext);
+  console.log(user);
   return (
     <div className="vh-100" style={{ backgroundColor: '#eee' }}>
       <MDBContainer className="container py-5 h-100">
@@ -9,13 +12,13 @@ export default function ProfileStatistics() {
           <MDBCol md="12" xl="4">
             <MDBCard style={{ borderRadius: '15px' }}>
               <MDBCardBody className="text-center">
-                <div className="mt-3 mb-4">
-                  <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                <div className="mt-3 mb-4 flex w-full justify-center">
+                  <MDBCardImage src={user.picture}
                     className="rounded-circle" fluid style={{ width: '100px' }} />
                 </div>
-                <MDBTypography tag="h4">FName LName</MDBTypography>
+                <MDBTypography tag="h4">{user.name}</MDBTypography>
                 <MDBCardText className="text-muted mb-4">
-                  @Occupation <span className="mx-2">|</span> <a href="#!">emailid.com</a>
+                  @Occupation <span className="mx-2">|</span> <a href="#!">{user.email}</a>
                 </MDBCardText>
                 <div className="mb-4 pb-2">
                   <MDBBtn outline floating>
