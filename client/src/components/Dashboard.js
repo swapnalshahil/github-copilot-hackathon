@@ -66,6 +66,7 @@ const Dashboard = () => {
       <div className="relative">
         <div className="w-64 h-64 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
           <div className="text-gray-500 text-sm mb-2">Current Balance</div>
+          <img src="https://static.vecteezy.com/system/resources/previews/005/567/661/original/rupee-icon-indian-currency-symbol-illustration-coin-symbol-free-vector.jpg" width="100" height="100"></img>
           <div className="text-2xl text-blue-500 font-semibold">
             INR {currentBalance}
           </div>
@@ -108,14 +109,14 @@ const Dashboard = () => {
                       role="menuitem"
                       onClick={handleAddAmount}
                     >
-                      Add Amount
+                      Add Money
                     </button>
                     <button
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       role="menuitem"
                       onClick={handleRemoveAmount}
                     >
-                      Remove Amount
+                      Add Transaction
                     </button>
                   </div>
                 </div>
@@ -127,6 +128,7 @@ const Dashboard = () => {
 
       <div className="w-64 h-64 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
         <div className="text-gray-500 text-sm mb-2">Amount Spent</div>
+        <img src="https://static.vecteezy.com/system/resources/previews/005/567/661/original/rupee-icon-indian-currency-symbol-illustration-coin-symbol-free-vector.jpg" width="100" height="100"></img>
         <div className="text-2xl text-red-500 font-semibold">INR 300</div>
       </div>
       <div className="w-64 h-64 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">

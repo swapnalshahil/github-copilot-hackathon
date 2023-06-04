@@ -9,8 +9,8 @@ import LandinPage from './components/LandingPage';
 import TransactionPage from './components/TransactionPage';
 import Signup from './components/Signup';
 import ProtectedRoute from './components/ProtectedRoute';
-
-
+import Addtransaction from './components/Transactions/Addtransaction';
+import Addamount from './components/Transactions/Addamount';
 
 function App() {
 
@@ -23,9 +23,11 @@ function App() {
         <Route path="/transaction" element={<ProtectedRoute><TransactionPage /></ProtectedRoute>} />
         <Route path="/analytics" element={<ProtectedRoute><Bargraphs /></ProtectedRoute>} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/addamount" element={<Addamount />} />
+        <Route path="/addtransaction" element={<Addtransaction />} />
       </Routes>
     </Router>
-    
+
   );
 }
 
