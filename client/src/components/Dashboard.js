@@ -1,6 +1,5 @@
 import React from "react";
 import { Pie } from "react-chartjs-2";
-import TransactionList from "./Transactions";
 
 const Dashboard = () => {
   // Sample data for the pie chart
