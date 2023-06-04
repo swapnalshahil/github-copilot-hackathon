@@ -19,6 +19,7 @@ const createTransaction = async (req, res) => {
   try {
     const { id } = req.params;
     const {
+      _id,
       title,
       description,
       sourceUser,
@@ -27,6 +28,7 @@ const createTransaction = async (req, res) => {
       transactionDate,
     } = req.body;
     const transaction = await createNewTransaction({
+      _id,
       title,
       description,
       sourceUser,
@@ -44,6 +46,7 @@ const updateTransaction = async (req, res) => {
   try {
     const { id } = req.params;
     const {
+      _id,
       title,
       description,
       sourceUser,
@@ -53,6 +56,7 @@ const updateTransaction = async (req, res) => {
     } = req.body;
     const transaction = await findTransactionById(id);
     const updatedTransaction = await updateTransactionDetails(transaction, {
+      _id,
       title,
       description,
       sourceUser,
@@ -69,8 +73,7 @@ const updateTransaction = async (req, res) => {
 const deleteTransaction = async (req, res) => {
   try {
     const { id } = req.params;
-    const transaction = await findTransactionById(id);
-    await deleteTransactionById(transaction);
+    await deleteTransactionById(id);
     res.status(200).json({ message: "Transaction deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
