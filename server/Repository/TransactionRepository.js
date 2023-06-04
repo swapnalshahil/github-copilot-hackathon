@@ -1,6 +1,6 @@
 const Transactions= require("../Schemas/TransactionSchema");
 
-const createNewTransaction = (details) => {
+const createNewTransaction = async (details) => {
     const transaction = new Transactions();
     Object.entries(details).forEach(([key, value]) => {
         if (key in transaction) {
