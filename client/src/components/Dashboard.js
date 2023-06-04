@@ -1,40 +1,52 @@
 import React, { useState } from "react";
 import { Pie } from "react-chartjs-2";
+import AddRemoveModal from "./AddRemoveModal";
+import Modal from "react-modal";
+
+Modal.setAppElement(document.getElementById("root"));
 
 const Dashboard = () => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [amountToAdd, setAmountToAdd] = useState("");
   const [currentBalance, setCurrentBalance] = useState(500);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [amountToAdd, setAmountToAdd] = useState("");
 
   const handleDropdownToggle = () => {
     setShowDropdown(!showDropdown);
   };
- const handleAddAmount = () => {
-   
-   if (!amountToAdd || isNaN(amountToAdd)) {
-     console.log("Invalid amount");
-     return;
-   }
 
-   const amount = parseFloat(amountToAdd);
-   
-   const newBalance = currentBalance + amount;
-   setCurrentBalance(newBalance);
-
-   
-   setAmountToAdd(0);
-   setShowDropdown(false);
- };
-
-
-  const handleRemoveAmount = () => {
-  
-    const newBalance = currentBalance - parseFloat(amountToAdd);
+  const handleAddAmount = (amount) => {
+    const newBalance = currentBalance + amount;
     setCurrentBalance(newBalance);
+  };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  
+  };
+
+  const handleAmountChange = (e) => {
+    setAmountToAdd(e.target.value);
+  };
+
+  const handleAddButtonClick = () => {
+    if (!amountToAdd || isNaN(amountToAdd)) {
+      console.log("Invalid amount");
+      return;
+    }
+
+    const amount = parseFloat(amountToAdd);
+    handleAddAmount(amount);
     setAmountToAdd("");
+    closeModal();
     setShowDropdown(false);
   };
+
   // Sample data for the pie chart
   const pieChartData = {
     labels: ["Spent", "Remaining"],
@@ -46,6 +58,7 @@ const Dashboard = () => {
       },
     ],
   };
+
   const pieChartOptions = {
     elements: {
       arc: {
@@ -66,7 +79,12 @@ const Dashboard = () => {
       <div className="relative">
         <div className="w-64 h-64 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
           <div className="text-gray-500 text-sm mb-2">Current Balance</div>
-          <img src="https://static.vecteezy.com/system/resources/previews/005/567/661/original/rupee-icon-indian-currency-symbol-illustration-coin-symbol-free-vector.jpg" width="100" height="100"></img>
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/005/567/661/original/rupee-icon-indian-currency-symbol-illustration-coin-symbol-free-vector.jpg"
+            width="100"
+            height="100"
+            alt="Rupee Icon"
+          />
           <div className="text-2xl text-blue-500 font-semibold">
             INR {currentBalance}
           </div>
@@ -104,19 +122,19 @@ const Dashboard = () => {
                     aria-orientation="vertical"
                     aria-labelledby="options-menu"
                   >
+                    <AddRemoveModal
+                      isOpen={isModalOpen}
+                      closeModal={closeModal}
+                      handleAmountChange={handleAmountChange}
+                      amountToAdd={amountToAdd}
+                      handleAddButtonClick={handleAddButtonClick}
+                    />
                     <button
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       role="menuitem"
-                      onClick={handleAddAmount}
+                      onClick={openModal}
                     >
                       Add Money
-                    </button>
-                    <button
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                      role="menuitem"
-                      onClick={handleRemoveAmount}
-                    >
-                      Add Transaction
                     </button>
                   </div>
                 </div>
@@ -128,7 +146,12 @@ const Dashboard = () => {
 
       <div className="w-64 h-64 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
         <div className="text-gray-500 text-sm mb-2">Amount Spent</div>
-        <img src="https://static.vecteezy.com/system/resources/previews/005/567/661/original/rupee-icon-indian-currency-symbol-illustration-coin-symbol-free-vector.jpg" width="100" height="100"></img>
+        <img
+          src="https://static.vecteezy.com/system/resources/previews/005/567/661/original/rupee-icon-indian-currency-symbol-illustration-coin-symbol-free-vector.jpg"
+          width="100"
+          height="100"
+          alt="Rupee Icon"
+        />
         <div className="text-2xl text-red-500 font-semibold">INR 300</div>
       </div>
       <div className="w-64 h-64 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
