@@ -1,40 +1,82 @@
 import React, { useState } from "react";
 import { Pie } from "react-chartjs-2";
+import AddMoneyModal from "./Modals/AddMoneyModal";
+import RemoveMoneyModal from "./Modals/RemoveMoneyModal";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 const Dashboard = () => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [amountToAdd, setAmountToAdd] = useState("");
   const [currentBalance, setCurrentBalance] = useState(500);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [amountToAdd, setAmountToAdd] = useState("");
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [amountToRemove, setAmountToRemove] = useState("");
 
   const handleDropdownToggle = () => {
     setShowDropdown(!showDropdown);
   };
- const handleAddAmount = () => {
-   
-   if (!amountToAdd || isNaN(amountToAdd)) {
-     console.log("Invalid amount");
-     return;
-   }
 
-   const amount = parseFloat(amountToAdd);
-   
-   const newBalance = currentBalance + amount;
-   setCurrentBalance(newBalance);
-
-   
-   setAmountToAdd(0);
-   setShowDropdown(false);
- };
-
-
-  const handleRemoveAmount = () => {
-  
-    const newBalance = currentBalance - parseFloat(amountToAdd);
+  const handleAddAmount = (amount) => {
+    const newBalance = currentBalance + amount;
     setCurrentBalance(newBalance);
+  };
 
+  const handleRemoveAmount = (amount) => {
+    const newBalance = currentBalance - amount;
+    setCurrentBalance(newBalance);
+  };
+
+  const openAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const closeAddModal = () => {
+    setIsAddModalOpen(false);
+  };
+
+  const openRemoveModal = () => {
+    setIsRemoveModalOpen(true);
+  };
+
+  const closeRemoveModal = () => {
+    setIsRemoveModalOpen(false);
+  };
+
+  const handleAmountChange = (e) => {
+    if (isAddModalOpen) {
+      setAmountToAdd(e.target.value);
+    } else if (isRemoveModalOpen) {
+      setAmountToRemove(e.target.value);
+    }
+  };
+
+  const handleAddButtonClick = () => {
+    if (!amountToAdd || isNaN(amountToAdd)) {
+      console.log("Invalid amount");
+      return;
+    }
+
+    const amount = parseFloat(amountToAdd);
+    handleAddAmount(amount);
     setAmountToAdd("");
+    closeAddModal();
     setShowDropdown(false);
   };
+
+  const handleRemoveButtonClick = () => {
+    if (!amountToRemove || isNaN(amountToRemove)) {
+      console.log("Invalid amount");
+      return;
+    }
+
+    const amount = parseFloat(amountToRemove);
+    handleRemoveAmount(amount);
+    setAmountToRemove("");
+    closeRemoveModal();
+  };
+
   // Sample data for the pie chart
   const pieChartData = {
     labels: ["Spent", "Remaining"],
@@ -46,6 +88,7 @@ const Dashboard = () => {
       },
     ],
   };
+
   const pieChartOptions = {
     elements: {
       arc: {
@@ -66,7 +109,12 @@ const Dashboard = () => {
       <div className="relative">
         <div className="w-64 h-64 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
           <div className="text-gray-500 text-sm mb-2">Current Balance</div>
-          <img src="https://static.vecteezy.com/system/resources/previews/005/567/661/original/rupee-icon-indian-currency-symbol-illustration-coin-symbol-free-vector.jpg" width="100" height="100"></img>
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/005/567/661/original/rupee-icon-indian-currency-symbol-illustration-coin-symbol-free-vector.jpg"
+            width="100"
+            height="100"
+            alt="Rupee Icon"
+          />
           <div className="text-2xl text-blue-500 font-semibold">
             INR {currentBalance}
           </div>
@@ -107,16 +155,16 @@ const Dashboard = () => {
                     <button
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       role="menuitem"
-                      onClick={handleAddAmount}
+                      onClick={openAddModal}
                     >
                       Add Money
                     </button>
                     <button
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       role="menuitem"
-                      onClick={handleRemoveAmount}
+                      onClick={openRemoveModal}
                     >
-                      Add Transaction
+                      Remove Money
                     </button>
                   </div>
                 </div>
@@ -126,11 +174,19 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Amount Spent */}
       <div className="w-64 h-64 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
         <div className="text-gray-500 text-sm mb-2">Amount Spent</div>
-        <img src="https://static.vecteezy.com/system/resources/previews/005/567/661/original/rupee-icon-indian-currency-symbol-illustration-coin-symbol-free-vector.jpg" width="100" height="100"></img>
+        <img
+          src="https://static.vecteezy.com/system/resources/previews/005/567/661/original/rupee-icon-indian-currency-symbol-illustration-coin-symbol-free-vector.jpg"
+          width="100"
+          height="100"
+          alt="Rupee Icon"
+        />
         <div className="text-2xl text-red-500 font-semibold">INR 300</div>
       </div>
+
+      {/* Balance Overview */}
       <div className="w-64 h-64 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
         <div className="text-gray-500 mb-0">Balance Overview</div>
         <div className="flex justify-center">
@@ -139,6 +195,24 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Add Money Modal */}
+      <AddMoneyModal
+        isOpen={isAddModalOpen}
+        closeModal={closeAddModal}
+        handleAmountChange={handleAmountChange}
+        amountToAdd={amountToAdd}
+        handleAddButtonClick={handleAddButtonClick}
+      />
+
+      {/* Remove Money Modal */}
+      <RemoveMoneyModal
+        isOpen={isRemoveModalOpen}
+        closeModal={closeRemoveModal}
+        handleAmountChange={handleAmountChange}
+        amountToRemove={amountToRemove}
+        handleRemoveButtonClick={handleRemoveButtonClick}
+      />
     </div>
   );
 };
