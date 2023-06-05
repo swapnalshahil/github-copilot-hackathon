@@ -3,7 +3,8 @@ const express = require("express");
 const {
   loginUser,
   getLastYearDetails,
-  updateBalance
+  updateBalance,
+  getUserDetails
 } = require("../../controllers/users/userControl");
 
 const { isAuthenticated } = require("../../middlewares/auth");
@@ -15,6 +16,11 @@ userRoute.get(
   "/user/lastyeartransactions",
   isAuthenticated,
   getLastYearDetails
+);
+userRoute.get(
+  "/user",
+  isAuthenticated,
+  getUserDetails
 );
 userRoute.put(
   "/user/balance",

@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import AddMoneyModal from "./Modals/AddMoneyModal";
 import RemoveMoneyModal from "./Modals/RemoveMoneyModal";
 import AddTransactionModal from "./Modals/AddTransactionModal";
 import RemoveTransactionModal from "./Modals/RemoveTransactionModal";
 import Modal from "react-modal";
+import axios from 'axios';
+import { AuthContext } from "../contexts/authContextProvider";
 
 Modal.setAppElement("#root");
 
 const Dashboard = () => {
+
+  const {jwtToken} = useContext(AuthContext)
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSpentDropdown, setShowSpentDropdown] = useState(false);
   const [currentBalance, setCurrentBalance] = useState(500);
@@ -21,6 +26,27 @@ const Dashboard = () => {
   const [isRemoveTransactionModalOpen, setIsRemoveTransactionModalOpen] = useState(false);
   const [amountToRemove, setAmountToRemove] = useState("");
   const [transactionToRemove, setTransactionToRemove] = useState("");
+
+
+  useEffect(() => {
+    if(jwtToken)
+    {
+      console.log(jwtToken)
+      axios.get('http://localhost:4000/user', {
+        headers: {
+          'Authorization': jwtToken
+        }
+      }).then(res => {
+        setCurrentBalance(res.data.currentBalance)
+        setAmountSpent(
+          res.data.transactions.reduce(
+            (total, tr) => total + tr.amount, 
+            0
+          )
+        )
+      }).catch(e => console.log(e))
+    }
+  }, [jwtToken])
 
   // for add amount toggle
   const handleDropdownToggle = () => {

@@ -3,9 +3,9 @@ const isAuthenticated = ( req, res, next ) => {
     const jwtSecret = process.env.JWT_SECRET;
     const token = req.header('Authorization')
     try{
-        const email = jwt.verify(token, jwtSecret);
+        const jwtData = jwt.verify(token, jwtSecret);
         req.user = {
-            email
+            email: jwtData.data
         }
         next();
     }

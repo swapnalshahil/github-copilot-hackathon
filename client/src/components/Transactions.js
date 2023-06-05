@@ -1,44 +1,25 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { FaTrash, FaPenSquare } from "react-icons/fa";
+import axios from 'axios';
+import { AuthContext } from "../contexts/authContextProvider";
 const TransactionList = () => {
+  const [transactions, setTransactions] = useState([])
+  const {jwtToken} = useContext(AuthContext)
+  useEffect(() => {
+    if(jwtToken)
+    {
+      console.log(jwtToken)
+      axios.get('http://localhost:4000/user', {
+        headers: {
+          'Authorization': jwtToken
+        }
+      }).then(res => {
+        setTransactions(res.data.transactions)
+      }).catch(e => console.log(e))
+    }
+  }, [jwtToken])
   const [expandedTransactionId, setExpandedTransactionId] = useState(null);
-  const transactions = [
-    {
-      id: 1,
-      date: "2010-01-01",
-      description: "Transaction 1",
-      amount: 100,
-      currency: "USD",
-      type: "add",
-    },
-    {
-      id: 2,
-      date: "2022-01-02",
-      description: "Transaction 2",
-      amount: 200,
-      currency: "EUR",
-      type: "subtract",
-    },
-    {
-      id: 3,
-      date: "2023-01-03",
-      description: "Transaction 3",
-      amount: 300,
-      currency: "GBP",
-      type: "add",
-    },
-    {
-      id: 4,
-      date: "2023-01-02",
-      description: "Transaction 4",
-      amount: 200,
-      currency: "INR",
-      type: "add",
-    },
-
-
-  ];
 
   const handleTransactionClick = (transactionId) => {
     if (expandedTransactionId === transactionId) {

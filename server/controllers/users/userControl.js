@@ -13,7 +13,7 @@ const loginUser = async (req, res) => {
     // logic to check if user exists then throw error
     // else do registeration
     const jwtSecret = process.env.JWT_SECRET || "secret";
-    const userExist = findUserByEmail(email);
+    const userExist = await findUserByEmail(email);
     if (!userExist) {
       createNewUser({ email });
     }
@@ -78,4 +78,14 @@ res.status(200).json(user);
   res.status(500).json({ message: error.message });
 }
 }
-module.exports = { loginUser, getLastYearDetails,updateBalance };
+
+const getUserDetails=async(req,res)=>{
+  try{
+  let email=req.user.email;
+  let user=await findUserByEmail(email);
+  res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+  }
+module.exports = { loginUser, getLastYearDetails,updateBalance,getUserDetails };
