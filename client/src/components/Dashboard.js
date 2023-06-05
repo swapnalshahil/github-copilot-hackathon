@@ -206,7 +206,7 @@ const Dashboard = () => {
     labels: ["Spent", "Remaining"],
     datasets: [
       {
-        data: [75, 25],
+        data: [amountSpent, currentBalance],
         backgroundColor: ["#F87171", "#60A5FA"],
         hoverBackgroundColor: ["#F87171", "#60A5FA"],
       },
