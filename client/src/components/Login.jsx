@@ -51,7 +51,7 @@ function Login() {
           </p> */}
 
         </MDBCol>
-          <div className="d-flex flex-row align-items-center justify-content-center">
+          <div className="d-flex flex-row px-3">
 
             {/* <p className="lead fw-normal mb-0 me-3">Sign in with</p> */}
 
