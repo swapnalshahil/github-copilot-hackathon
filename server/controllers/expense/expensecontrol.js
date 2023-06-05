@@ -17,22 +17,13 @@ const transactionDetails = async (req, res) => {
 
 const createTransaction = async (req, res) => {
   try {
-    const { id } = req.params;
     const {
-      _id,
-      title,
       description,
-      sourceUser,
-      destinationUser,
       amount,
       transactionDate,
     } = req.body;
     const transaction = await createNewTransaction({
-      _id,
-      title,
       description,
-      sourceUser,
-      destinationUser,
       amount,
       transactionDate,
     });

@@ -71,7 +71,7 @@ try{
 let email=req.user.email;
 let amount=req.body.amount;
 let user=await findUserByEmail(email);
-let details={currentBalance:user.currentBalance+amount};
+let details={currentBalance: amount};
 user=await updateUserDetails(user,details);
 res.status(200).json(user);
 } catch (error) {

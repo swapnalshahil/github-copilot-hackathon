@@ -48,6 +48,16 @@ const Dashboard = () => {
     }
   }, [jwtToken])
 
+  useEffect(() => {
+    axios.put('http://localhost:4000/user/balance',{ amount: currentBalance}, {
+      headers: {
+        'Authorization': jwtToken
+      }
+    } ).then(() => {
+
+    }).catch(e => console.log(e))
+  }, [currentBalance])
+
   // for add amount toggle
   const handleDropdownToggle = () => {
     setShowDropdown(!showDropdown);
@@ -199,10 +209,15 @@ const Dashboard = () => {
       );
       return;
     }
-    const newTransaction = {
+
+    axios.post('http://localhost:4000/transaction/create', {
       amount,
-      date: new Date().toISOString(),
-    };
+      transactionDate: new Date()
+    }, {
+      headers: {
+        'Authorization': jwtToken
+      }
+    } ).catch(e => console.log(e));
 
     const newBalance = currentBalance - amount;
 
