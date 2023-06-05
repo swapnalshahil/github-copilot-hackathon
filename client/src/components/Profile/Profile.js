@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import {
   MDBCol,
   MDBContainer,
@@ -16,7 +17,45 @@ import { AuthContext } from "../../contexts/authContextProvider";
 import Navbar from "../Navbar/NavBar";
 
 export default function ProfileStatistics() {
-  const { user } = useContext(AuthContext);
+  const { user, jwtToken } = useContext(AuthContext);
+  const [totaltransactions, setTotaltransaction] = useState(0);
+  const [currentBalance, setCurrentBalance] = useState(0);
+  const [oneyeartransactiondata, setOneyeartransactiondata] = useState(0)
+
+  useEffect(() => {
+    if (jwtToken) {
+      console.log(jwtToken);
+      axios
+        .get("http://localhost:4000/user", {
+          headers: {
+            Authorization: jwtToken,
+          },
+        })
+        .then((res) => {
+          setCurrentBalance(res.data.currentBalance);
+          setTotaltransaction(res.data.transactions.length)
+          console.log(res.data, "meoeww")
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [jwtToken]);
+
+  useEffect(() => {
+    if (jwtToken) {
+      // console.log(jwtToken);
+      axios
+        .get("http://localhost:4000/user/lastyeartransactions", {
+          headers: {
+            Authorization: jwtToken,
+          },
+        })
+        .then((res) => {
+          setOneyeartransactiondata(res.data)
+          console.log(res.data, "transaction data");
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [jwtToken]);
 
   return (
     <>
@@ -51,7 +90,7 @@ export default function ProfileStatistics() {
                     <div className="d-flex align-items-center">
                       <FaRupeeSign className="mr-2" />
                       <MDBCardText className="mb-1 h5">
-                        {user.currency} {user.balance || 0}
+                        {user.currency} {user ? currentBalance : 0 }
                       </MDBCardText>
                     </div>
                     <MDBCardText className="small text-muted mb-0 text-center">
@@ -70,7 +109,7 @@ export default function ProfileStatistics() {
                         {user.lastMonthTransaction || 0}
                       </MDBCardText>
                       <MDBCardText className="small text-muted mb-0">
-                        Last Month's Transaction
+                        Last Month's Transactions
                       </MDBCardText>
                     </div>
                     <div>

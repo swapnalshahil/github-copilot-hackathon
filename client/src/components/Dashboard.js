@@ -7,6 +7,7 @@ import RemoveTransactionModal from "./Modals/RemoveTransactionModal";
 import Modal from "react-modal";
 import axios from 'axios';
 import { AuthContext } from "../contexts/authContextProvider";
+import TransactionList from './Transactions';
 
 Modal.setAppElement("#root");
 
@@ -16,8 +17,8 @@ const Dashboard = () => {
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSpentDropdown, setShowSpentDropdown] = useState(false);
-  const [currentBalance, setCurrentBalance] = useState(500);
-  const [amountSpent, setAmountSpent] = useState(300);
+  const [currentBalance, setCurrentBalance] = useState(0);
+  const [amountSpent, setAmountSpent] = useState(0);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] = useState(false);
   const [amountToAdd, setAmountToAdd] = useState("");
@@ -26,6 +27,8 @@ const Dashboard = () => {
   const [isRemoveTransactionModalOpen, setIsRemoveTransactionModalOpen] = useState(false);
   const [amountToRemove, setAmountToRemove] = useState("");
   const [transactionToRemove, setTransactionToRemove] = useState("");
+  const [transactionarray, setTransactionarray] = useState([])
+  const [transactiondetails, setTransactiondetails]= useState("")
 
 
   useEffect(() => {
@@ -169,6 +172,13 @@ const Dashboard = () => {
     }
   }
 
+  // handle description change of transaction
+  const handleDescriptionChange = (e) => {
+    if (isAddTransactionModalOpen) {
+      setTransactiondetails(e.target.value);
+    } 
+  }
+
   // on click of add button in add money modal card 1
   const handleAddButtonClick = () => {
     if (!amountToAdd || isNaN(amountToAdd)) {
@@ -212,7 +222,8 @@ const Dashboard = () => {
 
     axios.post('http://localhost:4000/transaction/create', {
       amount,
-      transactionDate: new Date()
+      transactionDate: new Date(),
+      transactionDetails: transactiondetails
     }, {
       headers: {
         'Authorization': jwtToken
@@ -349,7 +360,9 @@ const Dashboard = () => {
           height="100"
           alt="Rupee Icon"
         />
-        <div className="text-2xl text-red-500 font-semibold">INR {amountSpent}</div>
+        <div className="text-2xl text-red-500 font-semibold">
+          INR {amountSpent}
+        </div>
 
         <div className="absolute top-0 right-0">
           <div className="relative inline-block text-left">
@@ -439,6 +452,7 @@ const Dashboard = () => {
         closeModal={closeAddTransactionModal}
         handleTransactionChange={handleTransactionChange}
         transactionToAdd={transactionToAdd}
+        handleDescriptionChange = {handleDescriptionChange}
         handleAddTransactionButtonClick={handleAddTransactionButtonClick}
       />
 
