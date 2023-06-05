@@ -3,7 +3,8 @@ const { all } = require("../../app");
 const {
   createNewUser,
   findUserByEmail,
-  getUserTransactions
+  getUserTransactions,
+  updateUserDetails
 } = require("../../Repository/UserRepository");
 // Register
 const loginUser = async (req, res) => {
@@ -32,9 +33,10 @@ const loginUser = async (req, res) => {
   }
 };
 const getLastYearDetails = async (req, res) => {
-  const { id } = req.body;
   try {
-    let allTransactions = await getUserTransactions(id);
+    let email=req.user.email;
+    let user=await findUserByEmail(email);
+    let allTransactions = await getUserTransactions(user._id);
     allTransactions = allTransactions.transactions;
     const presentDate = new Date();
     const currentYearTransactions = allTransactions.filter(
@@ -46,7 +48,7 @@ const getLastYearDetails = async (req, res) => {
         return timeDifference < 365;
       }
     );
-    const monthWiseTransactionsDetail = allTransactions.reduce(
+    const monthWiseTransactionsDetail = currentYearTransactions.reduce(
       (reducer, currentTransaction) => {
         const currentTransactionMonth =
           currentTransaction.transactionDate.getMonth();
@@ -62,4 +64,18 @@ const getLastYearDetails = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-module.exports = { loginUser, getLastYearDetails };
+
+// to update the user balance, alter amount (+/-) to increase/decrease the balance
+const updateBalance=async(req,res)=>{
+try{
+let email=req.user.email;
+let amount=req.body.amount;
+let user=await findUserByEmail(email);
+let details={currentBalance:user.currentBalance+amount};
+user=await updateUserDetails(user,details);
+res.status(200).json(user);
+} catch (error) {
+  res.status(500).json({ message: error.message });
+}
+}
+module.exports = { loginUser, getLastYearDetails,updateBalance };

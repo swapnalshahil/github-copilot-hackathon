@@ -2,8 +2,10 @@
 const express = require("express");
 const {
   loginUser,
-  getLastYearDetails
+  getLastYearDetails,
+  updateBalance
 } = require("../../controllers/users/userControl");
+
 const { isAuthenticated } = require("../../middlewares/auth");
 
 const userRoute = express.Router();
@@ -14,5 +16,9 @@ userRoute.get(
   isAuthenticated,
   getLastYearDetails
 );
-
+userRoute.put(
+  "/user/balance",
+  isAuthenticated,
+  updateBalance
+);
 module.exports = userRoute;
