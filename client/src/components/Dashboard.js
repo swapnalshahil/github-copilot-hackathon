@@ -2,48 +2,120 @@ import React, { useState } from "react";
 import { Pie } from "react-chartjs-2";
 import AddMoneyModal from "./Modals/AddMoneyModal";
 import RemoveMoneyModal from "./Modals/RemoveMoneyModal";
+import AddTransactionModal from "./Modals/AddTransactionModal";
+import RemoveTransactionModal from "./Modals/RemoveTransactionModal";
 import Modal from "react-modal";
 
 Modal.setAppElement("#root");
 
 const Dashboard = () => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showSpentDropdown, setShowSpentDropdown] = useState(false);
   const [currentBalance, setCurrentBalance] = useState(500);
+  const [amountSpent, setAmountSpent] = useState(300);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] = useState(false);
   const [amountToAdd, setAmountToAdd] = useState("");
+  const [transactionToAdd, setTransactionToAdd] = useState("");
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [isRemoveTransactionModalOpen, setIsRemoveTransactionModalOpen] = useState(false);
   const [amountToRemove, setAmountToRemove] = useState("");
+  const [transactionToRemove, setTransactionToRemove] = useState("");
 
+  // for add amount toggle
   const handleDropdownToggle = () => {
     setShowDropdown(!showDropdown);
   };
 
+  // for spent amount toggle
+  const handleSpentDropdownToggle = () => {
+    setShowSpentDropdown(!showSpentDropdown);
+  };
+
+  // add amount to current balance card 1
   const handleAddAmount = (amount) => {
-    const newBalance = currentBalance + amount;
+    let newBalance = currentBalance +  parseFloat(amount);
     setCurrentBalance(newBalance);
   };
 
+  // remove amount from current balance card 1
   const handleRemoveAmount = (amount) => {
-    const newBalance = currentBalance - amount;
+    let newBalance = currentBalance -  parseFloat(amount);
     setCurrentBalance(newBalance);
   };
 
+  // add transaction to spent balance card 2
+  const handleAddTransaction = (amount) => {
+    if (currentBalance < parseFloat(amount)) {
+      console.log(
+        "Insufficient balance, Cannot Spent more than current balance"
+      );
+      return;
+    } else {
+      const newBalance = currentBalance - parseFloat(amount);
+      let newAmountSpent = amountSpent + parseFloat(amount);
+      setAmountSpent(newAmountSpent);
+      setCurrentBalance(newBalance);
+    }
+
+  }
+
+  // remove transaction from spent balance card 2
+  const handleRemoveTransaction = (amount) => {
+    if (amountSpent < parseFloat(amount)) {
+      console.log(
+        "Amount Spent is less than the amount to be removed, Cannot remove more than amount spent"
+      );
+      return;
+    } else {
+      const newBalance = currentBalance + parseFloat(amount);
+      setAmountSpent(amountSpent - parseFloat(amount));
+      setCurrentBalance(newBalance);
+    }
+   
+  }
+
+  // open the Add Money modal
   const openAddModal = () => {
     setIsAddModalOpen(true);
   };
 
+  // close the Add Money modal
   const closeAddModal = () => {
     setIsAddModalOpen(false);
   };
 
+  // open the Remove Money modal
   const openRemoveModal = () => {
     setIsRemoveModalOpen(true);
   };
 
+  // close the Remove Money modal
   const closeRemoveModal = () => {
     setIsRemoveModalOpen(false);
   };
 
+  // open the Add Transaction modal
+  const openAddTransactionModal = () => {
+    setIsAddTransactionModalOpen(true);
+  }
+
+  // close the Add Transaction modal
+  const closeAddTransactionModal = () => {
+    setIsAddTransactionModalOpen(false);
+  }
+
+  // open the Remove Transaction modal
+  const openRemoveTransactionModal = () => {
+    setIsRemoveTransactionModalOpen(true);
+  }
+
+  // close the Remove Transaction modal
+  const closeRemoveTransactionModal = () => {
+    setIsRemoveTransactionModalOpen(false);
+  }
+
+  // handle the amount change event
   const handleAmountChange = (e) => {
     if (isAddModalOpen) {
       setAmountToAdd(e.target.value);
@@ -52,6 +124,16 @@ const Dashboard = () => {
     }
   };
 
+  // handle the transaction change event
+  const handleTransactionChange = (e) => {
+    if (isAddTransactionModalOpen) {
+      setTransactionToAdd(e.target.value);
+    } else if (isRemoveTransactionModalOpen) {
+      setTransactionToRemove(e.target.value);
+    }
+  }
+
+  // on click of add button in add money modal card 1
   const handleAddButtonClick = () => {
     if (!amountToAdd || isNaN(amountToAdd)) {
       console.log("Invalid amount");
@@ -65,6 +147,7 @@ const Dashboard = () => {
     setShowDropdown(false);
   };
 
+  // on click of remove button in remove money modal card 1
   const handleRemoveButtonClick = () => {
     if (!amountToRemove || isNaN(amountToRemove)) {
       console.log("Invalid amount");
@@ -76,6 +159,47 @@ const Dashboard = () => {
     setAmountToRemove("");
     closeRemoveModal();
   };
+
+  // on click of add button in add transaction modal card 2
+  const handleAddTransactionButtonClick = () => {
+    if (!transactionToAdd || isNaN(transactionToAdd)) {
+      console.log("Invalid transaction");
+      return;
+    }
+    const amount = parseFloat(transactionToAdd);
+    if (currentBalance < amount) {
+      console.log(
+        "Insufficient balance, Cannot Spent more than current balance"
+      );
+      return;
+    }
+    const newTransaction = {
+      amount,
+      date: new Date().toISOString(),
+    };
+
+    const newBalance = currentBalance - amount;
+
+    // setTransactions([...transactions, newTransaction]);
+    setCurrentBalance(newBalance);
+    setAmountSpent(amountSpent + amount);
+    setTransactionToAdd("");
+    closeAddTransactionModal();
+    setShowSpentDropdown(false);
+  }
+
+  // on click of remove button in remove transaction modal card 2
+  const handleRemoveTransactionButtonClick = () => {
+    if (!transactionToRemove || isNaN(transactionToRemove)) {
+      console.log("Invalid transaction");
+      return;
+    }
+
+    const amount = parseFloat(amountToRemove);
+    handleRemoveTransaction(amount);
+    setAmountToRemove("");
+    closeRemoveTransactionModal();
+  }
 
   // Sample data for the pie chart
   const pieChartData = {
@@ -103,6 +227,7 @@ const Dashboard = () => {
       },
     },
   };
+  
 
   return (
     <div className="container flex flex-wrap justify-center space-x-4">
@@ -124,7 +249,7 @@ const Dashboard = () => {
               <div>
                 <button
                   type="button"
-                  className="inline-flex justify-center items-center px-4 py-2 bg-gray-200 text-sm text-gray-700 font-medium rounded-md hover:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                  className="inline-flex justify-center items-center px-4 py-4 bg-white text-sm text-gray-700 font-medium rounded-md hover:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
                   onClick={handleDropdownToggle}
                 >
                   <svg
@@ -175,7 +300,7 @@ const Dashboard = () => {
       </div>
 
       {/* Amount Spent */}
-      <div className="w-64 h-64 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
+      <div className="w-64 h-64 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between relative">
         <div className="text-gray-500 text-sm mb-2">Amount Spent</div>
         <img
           src="https://static.vecteezy.com/system/resources/previews/005/567/661/original/rupee-icon-indian-currency-symbol-illustration-coin-symbol-free-vector.jpg"
@@ -183,7 +308,60 @@ const Dashboard = () => {
           height="100"
           alt="Rupee Icon"
         />
-        <div className="text-2xl text-red-500 font-semibold">INR 300</div>
+        <div className="text-2xl text-red-500 font-semibold">INR {amountSpent}</div>
+
+        <div className="absolute top-0 right-0">
+          <div className="relative inline-block text-left">
+            <div>
+              <button
+                type="button"
+                className="inline-flex justify-center items-center px-4 py-4 bg-white text-sm text-gray-700 font-medium rounded-md hover:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                onClick={handleSpentDropdownToggle}
+              >
+                <svg
+                  className="-ml-1 mr-2 h-5 w-5 text-gray-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+            </div>
+            {showSpentDropdown && (
+              <div className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                <div
+                  className="py-1"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="options-menu"
+                >
+                  <button
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    role="menuitem"
+                    onClick={openAddTransactionModal}
+                  >
+                    Add Transaction
+                  </button>
+                  {/* <button
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    role="menuitem"
+                    onClick={openRemoveTransactionModal}
+                  >
+                    Remove Transaction
+                  </button> */}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Balance Overview */}
@@ -212,6 +390,24 @@ const Dashboard = () => {
         handleAmountChange={handleAmountChange}
         amountToRemove={amountToRemove}
         handleRemoveButtonClick={handleRemoveButtonClick}
+      />
+
+      {/* Add Transaction Modal */}
+      <AddTransactionModal
+        isOpen={isAddTransactionModalOpen}
+        closeModal={closeAddTransactionModal}
+        handleTransactionChange={handleTransactionChange}
+        transactionToAdd={transactionToAdd}
+        handleAddTransactionButtonClick={handleAddTransactionButtonClick}
+      />
+
+      {/* Remove Transaction Modal */}
+      <RemoveTransactionModal
+        isOpen={isRemoveTransactionModalOpen}
+        closeModal={closeRemoveTransactionModal}
+        handleTransactionChange={handleTransactionChange}
+        transactionToRemove={transactionToRemove}
+        handleRemoveTransactionButtonClick={handleRemoveTransactionButtonClick}
       />
     </div>
   );
