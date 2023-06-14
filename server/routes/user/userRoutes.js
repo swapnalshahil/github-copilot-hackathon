@@ -4,7 +4,7 @@ const {
   loginUser,
   getLastYearDetails,
   updateBalance,
-  getUserDetails
+  getUserDetails,
 } = require("../../controllers/users/userControl");
 
 const { isAuthenticated } = require("../../middlewares/auth");
@@ -13,18 +13,10 @@ const userRoute = express.Router();
 
 userRoute.post("/login", loginUser);
 userRoute.get(
-  "/user/lastyeartransactions",
+  "/lastyeartransactions",
   isAuthenticated,
   getLastYearDetails
 );
-userRoute.get(
-  "/user",
-  isAuthenticated,
-  getUserDetails
-);
-userRoute.put(
-  "/user/balance",
-  isAuthenticated,
-  updateBalance
-);
+userRoute.get("/", isAuthenticated, getUserDetails);
+userRoute.put("/balance", isAuthenticated, updateBalance);
 module.exports = userRoute;
