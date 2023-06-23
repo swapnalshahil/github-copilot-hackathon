@@ -15,7 +15,8 @@ const TransactionList = () => {
           'Authorization': jwtToken
         }
       }).then(res => {
-        setTransactions(res.data.transactions)
+        console.log(res.data.transactions.transactions)
+        setTransactions(res.data.transactions.transactions)
       }).catch(e => console.log(e))
     }
   }, [jwtToken])
@@ -28,6 +29,11 @@ const TransactionList = () => {
       setExpandedTransactionId(transactionId);
     }
   };
+
+  const formatDate = (date) => {
+    const dateObj = new Date(date);
+    return dateObj.toISOString().substring(0, 10).split("-").reverse().join("-");
+  }
 
   return (
     <div className="bg-white w-70vw ml-20 mr-20 p-4 rounded-lg shadow-lg">
@@ -46,24 +52,28 @@ const TransactionList = () => {
                 className="cursor-pointer bg-white hover:bg-gray-100"
                 onClick={() => handleTransactionClick(transaction.id)}
               >
-                <td className="border px-4 py-2">{transaction.date}</td>
+                <td className="border px-4 py-2">{formatDate(transaction.transactionDate)}</td>
                 <td className="border px-4 py-2">{transaction.description}</td>
                 <td className="border px-4 py-2">{transaction.amount}</td>
               </tr>
-              {expandedTransactionId === transaction.id && (
+              {/* {expandedTransactionId === transaction.id && (
                 <tr>
                   <td className="border px-4 py-2" colSpan="3">
                     <div className="p-4 bg-white">
                       <p>Additional details:</p>
                       <p>{transaction.additionalDetails}</p>
                       <div>
-                        <a href='#'><FaPenSquare style={{ fontSize: '25px'}} /></a>
-                        <a href='#'><FaTrash style={{ fontSize: '25px' }} /></a>
+                        <a href="#">
+                          <FaPenSquare style={{ fontSize: "25px" }} />
+                        </a>
+                        <a href="#">
+                          <FaTrash style={{ fontSize: "25px" }} />
+                        </a>
                       </div>
                     </div>
                   </td>
                 </tr>
-              )}
+              )} */}
             </React.Fragment>
           ))}
         </tbody>

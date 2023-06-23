@@ -11,19 +11,19 @@ const TransactionStats = () => {
   const { user, jwtToken } = useContext(AuthContext);
   console.log(user)
   useEffect(() => {
-    if(user && jwtToken){
+    if(jwtToken){
       //api update need to be done
-      axios.get(`http://localhost:4000/getexpensebyid/${user.id}`, {
-        headers: {
-          Authorization: jwtToken,
-          Accept: "application/json",
-        }
-      })
-      .then((res) => {
-        console.log(res.data);
-        setTransactions(res.data);
-      })
-      .catch((err) => console.log(err));
+      axios
+        .get(`http://localhost:4000/user`, {
+          headers: {
+            Authorization: jwtToken,
+          },
+        })
+        .then((res) => {
+          // console.log(res.data.transactions.transactions);
+          setTransactions(res.data.transactions.transactions);
+        })
+        .catch((err) => console.log(err));
     }
   })
 
@@ -69,15 +69,24 @@ const TransactionStats = () => {
     return amount.toLocaleString("en-US", {
       style: "currency",
       bold: true,
-      currency: currency,
+      currency: currency ? currency : "INR",
     });
   };
+   const formatDate = (date) => {
+     const dateObj = new Date(date);
+     return dateObj
+       .toISOString()
+       .substring(0, 10)
+       .split("-")
+       .reverse()
+       .join("-");
+   };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Transaction Page</h1>
       <div className="flex items-center mb-4">
-        <label htmlFor="filter" className="mr-2">
+        {/* <label htmlFor="filter" className="mr-2">
           Filter:
         </label>
         <select
@@ -89,7 +98,7 @@ const TransactionStats = () => {
           <option value="all">All</option>
           <option value="add">Add</option>
           <option value="subtract">Subtract</option>
-        </select>
+        </select> */}
         <label htmlFor="sort" className="ml-4 mr-2">
           Sort By:
         </label>
@@ -117,10 +126,10 @@ const TransactionStats = () => {
           >
             {/* Transaction details */}
             <div className="flex justify-between">
-               <div className="font-bold">
-                {transaction.date} - {transaction.description}
-               </div>
-               <div
+              <div className="font-bold">
+                {formatDate(transaction.transactionDate)} - {transaction.description}
+              </div>
+              <div
                 className={`${
                   transaction.type === "add" ? "text-green-500" : "text-red-500"
                 }`}

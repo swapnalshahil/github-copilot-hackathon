@@ -29,6 +29,7 @@ const Dashboard = () => {
   const [transactionToRemove, setTransactionToRemove] = useState("");
   const [transactionarray, setTransactionarray] = useState([])
   const [transactiondetails, setTransactiondetails]= useState("")
+  const [descriptionToAdd, setDescriptionToAdd] = useState("");
 
 
   useEffect(() => {
@@ -40,9 +41,10 @@ const Dashboard = () => {
           'Authorization': jwtToken
         }
       }).then(res => {
-        setCurrentBalance(res.data.currentBalance)
+        // console.log(res.data)
+        setCurrentBalance(res.data.user.currentBalance)
         setAmountSpent(
-          res.data.transactions.reduce(
+          res.data.transactions.transactions.reduce(
             (total, tr) => total + tr.amount, 
             0
           )
@@ -50,6 +52,7 @@ const Dashboard = () => {
       }).catch(e => console.log(e))
     }
   }, [jwtToken])
+
 
   useEffect(() => {
     axios.put('http://localhost:4000/user/balance',{ amount: currentBalance}, {
@@ -175,7 +178,7 @@ const Dashboard = () => {
   // handle description change of transaction
   const handleDescriptionChange = (e) => {
     if (isAddTransactionModalOpen) {
-      setTransactiondetails(e.target.value);
+      setDescriptionToAdd(e.target.value);
     } 
   }
 
@@ -220,22 +223,30 @@ const Dashboard = () => {
       return;
     }
 
-    axios.post('http://localhost:4000/transaction/create', {
-      amount,
-      transactionDate: new Date(),
-      transactionDetails: transactiondetails
-    }, {
-      headers: {
-        'Authorization': jwtToken
-      }
-    } ).catch(e => console.log(e));
+    axios
+      .post(
+        "http://localhost:4000/transaction/create",
+        {
+          amount,
+          transactionDate: new Date(),
+          description: descriptionToAdd,
+        },
+        {
+          headers: {
+            Authorization: jwtToken,
+          },
+        }
+      )
+      .catch((e) => console.log(e));
 
     const newBalance = currentBalance - amount;
 
     // setTransactions([...transactions, newTransaction]);
+    setDescriptionToAdd(descriptionToAdd)
     setCurrentBalance(newBalance);
     setAmountSpent(amountSpent + amount);
     setTransactionToAdd("");
+    setDescriptionToAdd("");
     closeAddTransactionModal();
     setShowSpentDropdown(false);
   }
@@ -452,6 +463,7 @@ const Dashboard = () => {
         closeModal={closeAddTransactionModal}
         handleTransactionChange={handleTransactionChange}
         transactionToAdd={transactionToAdd}
+        descriptionToAdd={descriptionToAdd}
         handleDescriptionChange = {handleDescriptionChange}
         handleAddTransactionButtonClick={handleAddTransactionButtonClick}
       />
