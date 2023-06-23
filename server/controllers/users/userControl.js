@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken");
-const { all } = require("../../app");
 const {
   createNewUser,
   findUserByEmail,
   getUserTransactions,
-  updateUserDetails
+  updateUserDetails,
 } = require("../../Repository/UserRepository");
 // Register
 const loginUser = async (req, res) => {
@@ -20,7 +19,7 @@ const loginUser = async (req, res) => {
     const token = jwt.sign(
       {
         data: email,
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 // expires in 1 hour
+        exp: Math.floor(Date.now() / 1000) + 60 * 60, // expires in 1 hour
       },
       jwtSecret
     );
@@ -32,10 +31,11 @@ const loginUser = async (req, res) => {
     res.json(error);
   }
 };
+
 const getLastYearDetails = async (req, res) => {
   try {
-    let email=req.user.email;
-    let user=await findUserByEmail(email);
+    let email = req.user.email;
+    let user = await findUserByEmail(email);
     let allTransactions = await getUserTransactions(user._id);
     allTransactions = allTransactions.transactions;
     const presentDate = new Date();
@@ -66,6 +66,7 @@ const getLastYearDetails = async (req, res) => {
 };
 
 // to update the user balance, alter amount (+/-) to increase/decrease the balance
+
 const updateBalance=async(req,res)=>{
 try{
 let email=req.user.email;
@@ -90,5 +91,12 @@ const getUserDetails=async(req,res)=>{
     res.status(500).json({ message: error.message });
   }
 
+
   }
-module.exports = { loginUser, getLastYearDetails,updateBalance,getUserDetails };
+};
+module.exports = {
+  loginUser,
+  getLastYearDetails,
+  updateBalance,
+  getUserDetails,
+};
