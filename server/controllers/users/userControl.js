@@ -83,9 +83,12 @@ const getUserDetails=async(req,res)=>{
   try{
   let email=req.user.email;
   let user=await findUserByEmail(email);
-  res.status(200).json(user);
+  const transactions = await getUserTransactions(user._id);
+  res.status(200).json({ user, transactions });
+  // res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+
   }
 module.exports = { loginUser, getLastYearDetails,updateBalance,getUserDetails };

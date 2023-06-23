@@ -32,8 +32,8 @@ export default function ProfileStatistics() {
           },
         })
         .then((res) => {
-          setCurrentBalance(res.data.currentBalance);
-          setTotaltransaction(res.data.transactions.length)
+          setCurrentBalance(res.data.user.currentBalance);
+          setTotaltransaction(res.data.transactions.transactions.length)
           console.log(res.data, "meoeww")
         })
         .catch((e) => console.log(e));
@@ -50,7 +50,7 @@ export default function ProfileStatistics() {
           },
         })
         .then((res) => {
-          setOneyeartransactiondata(res.data)
+          setOneyeartransactiondata(res.data.transactions.transactions)
           console.log(res.data, "transaction data");
         })
         .catch((e) => console.log(e));
