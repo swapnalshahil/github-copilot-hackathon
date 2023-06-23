@@ -4,7 +4,7 @@ const {
   loginUser,
   getLastYearDetails,
   updateBalance,
-  getUserDetails,
+  getUserDetails
 } = require("../../controllers/users/userControl");
 
 const { isAuthenticated } = require("../../middlewares/auth");
