@@ -5,58 +5,66 @@ import RemoveMoneyModal from "./Modals/RemoveMoneyModal";
 import AddTransactionModal from "./Modals/AddTransactionModal";
 import RemoveTransactionModal from "./Modals/RemoveTransactionModal";
 import Modal from "react-modal";
-import axios from 'axios';
+import axios from "axios";
 import { AuthContext } from "../contexts/authContextProvider";
 
 Modal.setAppElement("#root");
 
 const Dashboard = () => {
-
-  const {jwtToken} = useContext(AuthContext)
+  const { jwtToken } = useContext(AuthContext);
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSpentDropdown, setShowSpentDropdown] = useState(false);
   const [currentBalance, setCurrentBalance] = useState(500);
   const [amountSpent, setAmountSpent] = useState(300);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] = useState(false);
+  const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] =
+    useState(false);
   const [amountToAdd, setAmountToAdd] = useState("");
   const [transactionToAdd, setTransactionToAdd] = useState("");
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
-  const [isRemoveTransactionModalOpen, setIsRemoveTransactionModalOpen] = useState(false);
+  const [isRemoveTransactionModalOpen, setIsRemoveTransactionModalOpen] =
+    useState(false);
   const [amountToRemove, setAmountToRemove] = useState("");
   const [transactionToRemove, setTransactionToRemove] = useState("");
 
-
   useEffect(() => {
-    if(jwtToken)
-    {
-      console.log(jwtToken)
-      axios.get('http://localhost:4000/user', {
-        headers: {
-          'Authorization': jwtToken
-        }
-      }).then(res => {
-        setCurrentBalance(res.data.currentBalance)
-        setAmountSpent(
-          res.data.transactions.reduce(
-            (total, tr) => total + tr.amount, 
-            0
-          )
-        )
-      }).catch(e => console.log(e))
+    if (jwtToken) {
+      axios
+        .get("http://localhost:4000/user", {
+          headers: {
+            Authorization: jwtToken
+          }
+        })
+        .then((res) => {
+          setCurrentBalance(res.data.user.currentBalance);
+          setAmountSpent(
+            res.data.transactions.transactions.reduce(
+              (total, tr) => total + tr.amount,
+              0
+            )
+          );
+        })
+        .catch((e) => console.log(e));
     }
-  }, [jwtToken])
+  }, [jwtToken]);
 
   useEffect(() => {
-    axios.put('http://localhost:4000/user/balance',{ amount: currentBalance}, {
-      headers: {
-        'Authorization': jwtToken
-      }
-    } ).then(() => {
-
-    }).catch(e => console.log(e))
-  }, [currentBalance])
+    if (jwtToken) {
+      axios
+        .put(
+          "http://localhost:4000/user/balance",
+          { amount: currentBalance },
+          {
+            headers: {
+              Authorization: jwtToken
+            }
+          }
+        )
+        .then(() => {})
+        .catch((e) => console.log(e));
+    }
+  }, [currentBalance]);
 
   // for add amount toggle
   const handleDropdownToggle = () => {
@@ -70,13 +78,13 @@ const Dashboard = () => {
 
   // add amount to current balance card 1
   const handleAddAmount = (amount) => {
-    let newBalance = currentBalance +  parseFloat(amount);
+    let newBalance = currentBalance + parseFloat(amount);
     setCurrentBalance(newBalance);
   };
 
   // remove amount from current balance card 1
   const handleRemoveAmount = (amount) => {
-    let newBalance = currentBalance -  parseFloat(amount);
+    let newBalance = currentBalance - parseFloat(amount);
     setCurrentBalance(newBalance);
   };
 
@@ -93,8 +101,7 @@ const Dashboard = () => {
       setAmountSpent(newAmountSpent);
       setCurrentBalance(newBalance);
     }
-
-  }
+  };
 
   // remove transaction from spent balance card 2
   const handleRemoveTransaction = (amount) => {
@@ -108,8 +115,7 @@ const Dashboard = () => {
       setAmountSpent(amountSpent - parseFloat(amount));
       setCurrentBalance(newBalance);
     }
-   
-  }
+  };
 
   // open the Add Money modal
   const openAddModal = () => {
@@ -134,22 +140,22 @@ const Dashboard = () => {
   // open the Add Transaction modal
   const openAddTransactionModal = () => {
     setIsAddTransactionModalOpen(true);
-  }
+  };
 
   // close the Add Transaction modal
   const closeAddTransactionModal = () => {
     setIsAddTransactionModalOpen(false);
-  }
+  };
 
   // open the Remove Transaction modal
   const openRemoveTransactionModal = () => {
     setIsRemoveTransactionModalOpen(true);
-  }
+  };
 
   // close the Remove Transaction modal
   const closeRemoveTransactionModal = () => {
     setIsRemoveTransactionModalOpen(false);
-  }
+  };
 
   // handle the amount change event
   const handleAmountChange = (e) => {
@@ -167,7 +173,7 @@ const Dashboard = () => {
     } else if (isRemoveTransactionModalOpen) {
       setTransactionToRemove(e.target.value);
     }
-  }
+  };
 
   // on click of add button in add money modal card 1
   const handleAddButtonClick = () => {
@@ -210,14 +216,20 @@ const Dashboard = () => {
       return;
     }
 
-    axios.post('http://localhost:4000/transaction/create', {
-      amount,
-      transactionDate: new Date()
-    }, {
-      headers: {
-        'Authorization': jwtToken
-      }
-    } ).catch(e => console.log(e));
+    axios
+      .post(
+        "http://localhost:4000/transaction/create",
+        {
+          amount,
+          transactionDate: new Date()
+        },
+        {
+          headers: {
+            Authorization: jwtToken
+          }
+        }
+      )
+      .catch((e) => console.log(e));
 
     const newBalance = currentBalance - amount;
 
@@ -227,7 +239,7 @@ const Dashboard = () => {
     setTransactionToAdd("");
     closeAddTransactionModal();
     setShowSpentDropdown(false);
-  }
+  };
 
   // on click of remove button in remove transaction modal card 2
   const handleRemoveTransactionButtonClick = () => {
@@ -240,7 +252,7 @@ const Dashboard = () => {
     handleRemoveTransaction(amount);
     setAmountToRemove("");
     closeRemoveTransactionModal();
-  }
+  };
 
   // Sample data for the pie chart
   const pieChartData = {
@@ -249,26 +261,25 @@ const Dashboard = () => {
       {
         data: [amountSpent, currentBalance],
         backgroundColor: ["#F87171", "#60A5FA"],
-        hoverBackgroundColor: ["#F87171", "#60A5FA"],
-      },
-    ],
+        hoverBackgroundColor: ["#F87171", "#60A5FA"]
+      }
+    ]
   };
 
   const pieChartOptions = {
     elements: {
       arc: {
-        borderWidth: 0,
-      },
+        borderWidth: 0
+      }
     },
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "bottom",
-      },
-    },
+        position: "bottom"
+      }
+    }
   };
-  
 
   return (
     <div className="container flex flex-wrap justify-center space-x-4">
@@ -349,7 +360,9 @@ const Dashboard = () => {
           height="100"
           alt="Rupee Icon"
         />
-        <div className="text-2xl text-red-500 font-semibold">INR {amountSpent}</div>
+        <div className="text-2xl text-red-500 font-semibold">
+          INR {amountSpent}
+        </div>
 
         <div className="absolute top-0 right-0">
           <div className="relative inline-block text-left">

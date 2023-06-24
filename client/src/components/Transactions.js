@@ -9,13 +9,12 @@ const TransactionList = () => {
   useEffect(() => {
     if(jwtToken)
     {
-      console.log(jwtToken)
       axios.get('http://localhost:4000/user', {
         headers: {
           'Authorization': jwtToken
         }
       }).then(res => {
-        setTransactions(res.data.transactions)
+        setTransactions(res.data.transactions.transactions)
       }).catch(e => console.log(e))
     }
   }, [jwtToken])
@@ -46,7 +45,7 @@ const TransactionList = () => {
                 className="cursor-pointer bg-white hover:bg-gray-100"
                 onClick={() => handleTransactionClick(transaction.id)}
               >
-                <td className="border px-4 py-2">{transaction.date}</td>
+                <td className="border px-4 py-2">{transaction.transactionDate}</td>
                 <td className="border px-4 py-2">{transaction.description}</td>
                 <td className="border px-4 py-2">{transaction.amount}</td>
               </tr>

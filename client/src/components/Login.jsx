@@ -31,7 +31,7 @@ function Login() {
 
         <MDBCol col='10' md='6'>
           {/* <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Sample image" /> */}
-          <img src="https://img.freepik.com/free-vector/finance-financial-performance-concept-illustration_53876-40450.jpg" class="img-fluid" alt="Sample image" />
+          <img src="https://img.freepik.com/free-vector/finance-financial-performance-concept-illustration_53876-40450.jpg" className="img-fluid" alt="Sample image" />
         </MDBCol>
         <br/>
         <br/>
