@@ -34,8 +34,8 @@ const loginUser = async (req, res) => {
 };
 const getLastYearDetails = async (req, res) => {
   try {
-    let email=req.user.email;
-    let user=await findUserByEmail(email);
+    let email = req.user.email;
+    let user = await findUserByEmail(email);
     let allTransactions = await getUserTransactions(user._id);
     allTransactions = allTransactions.transactions;
     const presentDate = new Date();
@@ -66,26 +66,32 @@ const getLastYearDetails = async (req, res) => {
 };
 
 // to update the user balance, alter amount (+/-) to increase/decrease the balance
-const updateBalance=async(req,res)=>{
-try{
-let email=req.user.email;
-let amount=req.body.amount;
-let user=await findUserByEmail(email);
-let details={currentBalance: amount};
-user=await updateUserDetails(user,details);
-res.status(200).json(user);
-} catch (error) {
-  res.status(500).json({ message: error.message });
-}
-}
-
-const getUserDetails=async(req,res)=>{
-  try{
-  let email=req.user.email;
-  let user=await findUserByEmail(email);
-  res.status(200).json(user);
+const updateBalance = async (req, res) => {
+  try {
+    let email = req.user.email;
+    let amount = req.body.amount;
+    let user = await findUserByEmail(email);
+    let details = { currentBalance: amount };
+    user = await updateUserDetails(user, details);
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+const getUserDetails = async (req, res) => {
+  try {
+    let email = req.user.email;
+    let user = await findUserByEmail(email);
+    const transactions = await getUserTransactions(user._id);
+    res.status(200).json({ user, transactions });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-module.exports = { loginUser, getLastYearDetails,updateBalance,getUserDetails };
+};
+module.exports = {
+  loginUser,
+  getLastYearDetails,
+  updateBalance,
+  getUserDetails
+};

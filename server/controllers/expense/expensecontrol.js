@@ -2,8 +2,9 @@ const {
   findTransactionById,
   createNewTransaction,
   updateTransactionDetails,
-  deleteTransactionById,
+  deleteTransactionById
 } = require("../../Repository/TransactionRepository");
+const { findUserByEmail } = require("../../Repository/UserRepository");
 
 const transactionDetails = async (req, res) => {
   try {
@@ -17,16 +18,16 @@ const transactionDetails = async (req, res) => {
 
 const createTransaction = async (req, res) => {
   try {
-    const {
-      description,
-      amount,
-      transactionDate,
-    } = req.body;
+    const { description, amount, transactionDate } = req.body;
+    const user = await findUserByEmail(req.user.email);
     const transaction = await createNewTransaction({
       description,
       amount,
       transactionDate,
+      user
     });
+    user.transactions.push(transaction);
+    await user.save();
     res.status(200).json(transaction);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -43,7 +44,7 @@ const updateTransaction = async (req, res) => {
       sourceUser,
       destinationUser,
       amount,
-      transactionDate,
+      transactionDate
     } = req.body;
     const transaction = await findTransactionById(id);
     const updatedTransaction = await updateTransactionDetails(transaction, {
@@ -53,7 +54,7 @@ const updateTransaction = async (req, res) => {
       sourceUser,
       destinationUser,
       amount,
-      transactionDate,
+      transactionDate
     });
     res.status(200).json(updatedTransaction);
   } catch (error) {
@@ -80,7 +81,6 @@ const getTransaction = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 module.exports = {
   transactionDetails,
