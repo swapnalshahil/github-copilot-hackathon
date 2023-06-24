@@ -6,7 +6,7 @@ const UserSchema = mongoose.Schema({
   currentBalance: { type: Number, default: 0 },
   transactions: [{ type: Schema.Types.ObjectId, ref: "Transaction" }],
   password: { type: String },
-  profilepicUrl: { type: String, default: "/images/user.jpg" }
+  profilepicUrl: { type: String, default: "/images/user.jpg" },
 });
 
 const User = mongoose.model("User", UserSchema);

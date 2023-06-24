@@ -28,6 +28,11 @@ const TransactionList = () => {
     }
   };
 
+  const formatDate = (date) => {
+    const dateObj = new Date(date);
+    return dateObj.toISOString().substring(0, 10).split("-").reverse().join("-");
+  }
+
   return (
     <div className="bg-white w-70vw ml-20 mr-20 p-4 rounded-lg shadow-lg">
       <table className="table-auto bg-white w-full">
@@ -49,20 +54,24 @@ const TransactionList = () => {
                 <td className="border px-4 py-2">{transaction.description}</td>
                 <td className="border px-4 py-2">{transaction.amount}</td>
               </tr>
-              {expandedTransactionId === transaction.id && (
+              {/* {expandedTransactionId === transaction.id && (
                 <tr>
                   <td className="border px-4 py-2" colSpan="3">
                     <div className="p-4 bg-white">
                       <p>Additional details:</p>
                       <p>{transaction.additionalDetails}</p>
                       <div>
-                        <a href='#'><FaPenSquare style={{ fontSize: '25px'}} /></a>
-                        <a href='#'><FaTrash style={{ fontSize: '25px' }} /></a>
+                        <a href="#">
+                          <FaPenSquare style={{ fontSize: "25px" }} />
+                        </a>
+                        <a href="#">
+                          <FaTrash style={{ fontSize: "25px" }} />
+                        </a>
                       </div>
                     </div>
                   </td>
                 </tr>
-              )}
+              )} */}
             </React.Fragment>
           ))}
         </tbody>

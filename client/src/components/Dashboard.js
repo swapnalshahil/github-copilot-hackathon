@@ -7,6 +7,7 @@ import RemoveTransactionModal from "./Modals/RemoveTransactionModal";
 import Modal from "react-modal";
 import axios from "axios";
 import { AuthContext } from "../contexts/authContextProvider";
+import TransactionList from './Transactions';
 
 Modal.setAppElement("#root");
 
@@ -15,8 +16,8 @@ const Dashboard = () => {
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSpentDropdown, setShowSpentDropdown] = useState(false);
-  const [currentBalance, setCurrentBalance] = useState(500);
-  const [amountSpent, setAmountSpent] = useState(300);
+  const [currentBalance, setCurrentBalance] = useState(0);
+  const [amountSpent, setAmountSpent] = useState(0);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] =
     useState(false);
@@ -27,6 +28,9 @@ const Dashboard = () => {
     useState(false);
   const [amountToRemove, setAmountToRemove] = useState("");
   const [transactionToRemove, setTransactionToRemove] = useState("");
+  const [transactionarray, setTransactionarray] = useState([])
+  const [transactiondetails, setTransactiondetails]= useState("")
+  const [descriptionToAdd, setDescriptionToAdd] = useState("");
 
   useEffect(() => {
     if (jwtToken) {
@@ -48,6 +52,7 @@ const Dashboard = () => {
         .catch((e) => console.log(e));
     }
   }, [jwtToken]);
+
 
   useEffect(() => {
     if (jwtToken) {
@@ -175,6 +180,13 @@ const Dashboard = () => {
     }
   };
 
+  // handle description change of transaction
+  const handleDescriptionChange = (e) => {
+    if (isAddTransactionModalOpen) {
+      setDescriptionToAdd(e.target.value);
+    } 
+  }
+
   // on click of add button in add money modal card 1
   const handleAddButtonClick = () => {
     if (!amountToAdd || isNaN(amountToAdd)) {
@@ -221,12 +233,13 @@ const Dashboard = () => {
         "http://localhost:4000/transaction/create",
         {
           amount,
-          transactionDate: new Date()
+          transactionDate: new Date(),
+          description: descriptionToAdd,
         },
         {
           headers: {
-            Authorization: jwtToken
-          }
+            Authorization: jwtToken,
+          },
         }
       )
       .catch((e) => console.log(e));
@@ -234,9 +247,11 @@ const Dashboard = () => {
     const newBalance = currentBalance - amount;
 
     // setTransactions([...transactions, newTransaction]);
+    setDescriptionToAdd(descriptionToAdd)
     setCurrentBalance(newBalance);
     setAmountSpent(amountSpent + amount);
     setTransactionToAdd("");
+    setDescriptionToAdd("");
     closeAddTransactionModal();
     setShowSpentDropdown(false);
   };
@@ -452,6 +467,8 @@ const Dashboard = () => {
         closeModal={closeAddTransactionModal}
         handleTransactionChange={handleTransactionChange}
         transactionToAdd={transactionToAdd}
+        descriptionToAdd={descriptionToAdd}
+        handleDescriptionChange = {handleDescriptionChange}
         handleAddTransactionButtonClick={handleAddTransactionButtonClick}
       />
 

@@ -6,6 +6,8 @@ const {
 } = require("../../Repository/TransactionRepository");
 const { findUserByEmail } = require("../../Repository/UserRepository");
 
+const { findUserByEmail } = require("../../Repository/UserRepository");
+
 const transactionDetails = async (req, res) => {
   try {
     const { id } = req.params;
@@ -21,6 +23,7 @@ const createTransaction = async (req, res) => {
     const { description, amount, transactionDate } = req.body;
     const user = await findUserByEmail(req.user.email);
     const transaction = await createNewTransaction({
+      user,
       description,
       amount,
       transactionDate,
@@ -28,6 +31,8 @@ const createTransaction = async (req, res) => {
     });
     user.transactions.push(transaction);
     await user.save();
+    console.log(user)
+    console.log(transaction)
     res.status(200).json(transaction);
   } catch (error) {
     res.status(500).json({ message: error.message });
