@@ -34,8 +34,8 @@ const loginUser = async (req, res) => {
 
 const getLastYearDetails = async (req, res) => {
   try {
+    let email = req.user.email;
     let user = await findUserByEmail(email);
-    let email = req?.user.email;
     let allTransactions = await getUserTransactions(user._id);
     allTransactions = allTransactions.transactions;
     // console.log("allTransactions", allTransactions);
@@ -71,12 +71,11 @@ const getLastYearDetails = async (req, res) => {
 // to update the user balance, alter amount (+/-) to increase/decrease the balance
 const updateBalance = async (req, res) => {
   try {
-    let _user = await findUserByEmail(email);
-    let email = req.user.email;
-    let amount = req.body.amount;
-    
-    let details = { currentBalance: amount };
-    user = await updateUserDetails(_user, details);
+    const email = req.user.email;
+    const amount = parseFloat(req.body.amount);
+    let user = await findUserByEmail(email);
+    const details = { currentBalance: amount };
+    user = await updateUserDetails(user, details);
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });

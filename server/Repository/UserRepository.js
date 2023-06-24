@@ -25,13 +25,15 @@ const getUserTransactions = async (id) => {
     .select("transactions");
 };
 const updateUserDetails = async (user, details) => {
+  console.log("before update", user)
   Object.entries(details).forEach(([key, value]) => {
     if (key in user) {
       user[key] = value;
     }
   });
   await user.save();
-  return user;
+  console.log("after update userrepo", user);
+  return await user;
 };
 
 exports.createNewUser = createNewUser;
