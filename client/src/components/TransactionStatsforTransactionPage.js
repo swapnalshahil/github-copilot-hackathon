@@ -8,7 +8,7 @@ const TransactionStats = () => {
   const [filterType, setFilterType] = useState("all");
   const [sortOption, setSortOption] = useState("none");
 
-  const { user, jwtToken } = useContext(AuthContext);
+  const { jwtToken } = useContext(AuthContext);
   // console.log(user)
   useEffect(() => {
     if(jwtToken){

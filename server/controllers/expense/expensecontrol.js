@@ -23,8 +23,7 @@ const createTransaction = async (req, res) => {
       user,
       description,
       amount,
-      transactionDate,
-      user
+      transactionDate
     });
     user.transactions.push(transaction);
     await user.save();

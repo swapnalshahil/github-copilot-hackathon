@@ -22,19 +22,19 @@ const Dashboard = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] =
     useState(false);
-  const [amountToAdd, setAmountToAdd] = useState("");
+  const [amountToAdd, setAmountToAdd] = useState(0);
   const [transactionToAdd, setTransactionToAdd] = useState("");
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [isRemoveTransactionModalOpen, setIsRemoveTransactionModalOpen] =
     useState(false);
-  const [amountToRemove, setAmountToRemove] = useState("");
+  const [amountToRemove, setAmountToRemove] = useState(0);
   const [transactionToRemove, setTransactionToRemove] = useState("");
-  const [transactionarray, setTransactionarray] = useState([]);
   const [transactiondetails, setTransactiondetails] = useState("");
   const [descriptionToAdd, setDescriptionToAdd] = useState("");
   const [dateToAdd, setDateToAdd] = useState(new Date());
 
   useEffect(() => {
+    
     if (jwtToken) {
       axios
         .get("http://localhost:4000/user", {
@@ -68,7 +68,6 @@ const Dashboard = () => {
             },
           }
         )
-        .then(() => {})
         .catch((e) => console.log(e));
     }
   }, [jwtToken, location, currentBalance]);
@@ -83,17 +82,60 @@ const Dashboard = () => {
     setShowSpentDropdown(!showSpentDropdown);
   };
 
-  // add amount to current balance card 1
-  const handleAddAmount = (amount) => {
-    let newBalance = currentBalance + parseFloat(amount);
-    setCurrentBalance(newBalance);
-  };
+ const handleAddAmount = (amount) => {
+   let newBalance = currentBalance + parseFloat(amount);
+   console.log(newBalance, "newBalance");
+  //  setCurrentBalance(newBalance);
 
-  // remove amount from current balance card 1
-  const handleRemoveAmount = (amount) => {
-    let newBalance = currentBalance - parseFloat(amount);
-    setCurrentBalance(newBalance);
-  };
+   // Make API request to update the balance in the database
+   axios
+     .put(
+       "http://localhost:4000/user/balance",
+       { amount: newBalance },
+       {
+         headers: {
+           Authorization: jwtToken,
+         },
+       }
+     )
+     .then((res) => {
+       setCurrentBalance(newBalance);
+     })
+     .then(() => {
+      console.log("Balance updated in the database");
+     })
+     .catch((error) => {
+       console.log("Error updating balance:", error);
+     });
+ };
+
+ // remove amount from current balance card 1
+ const handleRemoveAmount = (amount) => {
+   let newBalance = currentBalance - parseFloat(amount);
+  //  setCurrentBalance(newBalance);
+
+   // Make API request to update the balance in the database
+   axios
+     .put(
+       "http://localhost:4000/user/balance",
+       { amount: newBalance },
+       {
+         headers: {
+           Authorization: jwtToken,
+         },
+       }
+     )
+     .then((res) => {
+        setCurrentBalance(newBalance);
+     })
+     .then((response) => {
+       console.log("Balance updated in the database");
+     })
+     .catch((error) => {
+       console.log("Error updating balance:", error);
+     });
+ };
+
 
   // add transaction to spent balance card 2
   const handleAddTransaction = (amount) => {
@@ -215,7 +257,7 @@ const handleDateChange = (e) => {
 
     const amount = parseFloat(amountToAdd);
     handleAddAmount(amount);
-    setAmountToAdd("");
+    setAmountToAdd(0);
     closeAddModal();
     setShowDropdown(false);
   };
@@ -229,7 +271,7 @@ const handleDateChange = (e) => {
 
     const amount = parseFloat(amountToRemove);
     handleRemoveAmount(amount);
-    setAmountToRemove("");
+    setAmountToRemove(0);
     closeRemoveModal();
   };
   // on click of add button in add transaction modal card 2
@@ -261,6 +303,7 @@ const handleAddTransactionButtonClick = () => {
     )
     .then(() => {
       const newBalance = currentBalance - amount;
+      // debugger;
       setCurrentBalance(newBalance);
       setAmountSpent(amountSpent + amount);
       setTransactionToAdd("");
