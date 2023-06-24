@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
-app.use("/user", userRoute);
+app.use("/", userRoute);
 app.use("/transaction", transactionRoute)
 
 app.get("/auth/protected", isAuthenticated, (req, res) => {

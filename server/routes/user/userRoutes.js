@@ -13,10 +13,10 @@ const userRoute = express.Router();
 
 userRoute.post("/login", loginUser);
 userRoute.get(
-  "/lastyeartransactions",
+  "/user/lastyeartransactions",
   isAuthenticated,
   getLastYearDetails
 );
-userRoute.get("/", isAuthenticated, getUserDetails);
-userRoute.put("/balance", isAuthenticated, updateBalance);
+userRoute.get("/user", isAuthenticated, getUserDetails);
+userRoute.put("/user/balance", isAuthenticated, updateBalance);
 module.exports = userRoute;

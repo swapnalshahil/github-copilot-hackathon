@@ -5,9 +5,6 @@ const {
   deleteTransactionById
 } = require("../../Repository/TransactionRepository");
 const { findUserByEmail } = require("../../Repository/UserRepository");
-
-const { findUserByEmail } = require("../../Repository/UserRepository");
-
 const transactionDetails = async (req, res) => {
   try {
     const { id } = req.params;
