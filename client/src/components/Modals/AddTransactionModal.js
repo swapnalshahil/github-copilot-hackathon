@@ -75,12 +75,14 @@ const AddTransactionModal = ({
           <label htmlFor="dateInput" className="block text-left mb-2">
             Date
           </label>
+
           <input
             id="dateInput"
             type="date"
             value={dateToAdd}
             onChange={handleDateChange}
             className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring focus:border-blue-500"
+            placeholder={dateToAdd}
           />
         </div>
         <div>

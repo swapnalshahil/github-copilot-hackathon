@@ -28,8 +28,8 @@ const createTransaction = async (req, res) => {
     });
     user.transactions.push(transaction);
     await user.save();
-    console.log(user)
-    console.log(transaction)
+    // console.log(user)
+    // console.log(transaction)
     res.status(200).json(transaction);
   } catch (error) {
     res.status(500).json({ message: error.message });

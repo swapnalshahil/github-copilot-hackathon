@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Pie } from "react-chartjs-2";
 import AddMoneyModal from "./Modals/AddMoneyModal";
 import RemoveMoneyModal from "./Modals/RemoveMoneyModal";
@@ -13,7 +14,7 @@ Modal.setAppElement("#root");
 
 const Dashboard = () => {
   const { jwtToken } = useContext(AuthContext);
-
+  const location = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSpentDropdown, setShowSpentDropdown] = useState(false);
   const [currentBalance, setCurrentBalance] = useState(0);
@@ -28,19 +29,21 @@ const Dashboard = () => {
     useState(false);
   const [amountToRemove, setAmountToRemove] = useState("");
   const [transactionToRemove, setTransactionToRemove] = useState("");
-  const [transactionarray, setTransactionarray] = useState([])
-  const [transactiondetails, setTransactiondetails]= useState("")
+  const [transactionarray, setTransactionarray] = useState([]);
+  const [transactiondetails, setTransactiondetails] = useState("");
   const [descriptionToAdd, setDescriptionToAdd] = useState("");
+  const [dateToAdd, setDateToAdd] = useState(new Date());
 
   useEffect(() => {
     if (jwtToken) {
       axios
         .get("http://localhost:4000/user", {
           headers: {
-            Authorization: jwtToken
-          }
+            Authorization: jwtToken,
+          },
         })
         .then((res) => {
+          console.log(res.data, "from dashh");
           setCurrentBalance(res.data.user.currentBalance);
           setAmountSpent(
             res.data.transactions.transactions.reduce(
@@ -51,8 +54,7 @@ const Dashboard = () => {
         })
         .catch((e) => console.log(e));
     }
-  }, [jwtToken]);
-
+  }, [jwtToken, location]);
 
   useEffect(() => {
     if (jwtToken) {
@@ -62,14 +64,14 @@ const Dashboard = () => {
           { amount: currentBalance },
           {
             headers: {
-              Authorization: jwtToken
-            }
+              Authorization: jwtToken,
+            },
           }
         )
         .then(() => {})
         .catch((e) => console.log(e));
     }
-  }, [currentBalance]);
+  }, [jwtToken, location, currentBalance]);
 
   // for add amount toggle
   const handleDropdownToggle = () => {
@@ -107,7 +109,6 @@ const Dashboard = () => {
       setCurrentBalance(newBalance);
     }
   };
-
   // remove transaction from spent balance card 2
   const handleRemoveTransaction = (amount) => {
     if (amountSpent < parseFloat(amount)) {
@@ -141,7 +142,6 @@ const Dashboard = () => {
   const closeRemoveModal = () => {
     setIsRemoveModalOpen(false);
   };
-
   // open the Add Transaction modal
   const openAddTransactionModal = () => {
     setIsAddTransactionModalOpen(true);
@@ -170,7 +170,6 @@ const Dashboard = () => {
       setAmountToRemove(e.target.value);
     }
   };
-
   // handle the transaction change event
   const handleTransactionChange = (e) => {
     if (isAddTransactionModalOpen) {
@@ -180,12 +179,32 @@ const Dashboard = () => {
     }
   };
 
+  const formatDate = (date) => {
+    const dateObj = new Date(date);
+    return dateObj
+      .toISOString()
+      .substring(0, 10)
+      .split("-")
+      .reverse()
+      .join("-");
+  };
   // handle description change of transaction
   const handleDescriptionChange = (e) => {
     if (isAddTransactionModalOpen) {
       setDescriptionToAdd(e.target.value);
-    } 
+    }
+  };
+
+
+const handleDateChange = (e) => {
+  const selectedDate = e.target.value;
+  if (isAddTransactionModalOpen) {
+    const [year, month, day] = selectedDate.split("-");
+    const formattedDate = new Date(year, month - 1, day);
+    setDateToAdd(formattedDate.toISOString().split("T")[0]); // Set formatted date as placeholder value
   }
+};
+
 
   // on click of add button in add money modal card 1
   const handleAddButtonClick = () => {
@@ -213,48 +232,49 @@ const Dashboard = () => {
     setAmountToRemove("");
     closeRemoveModal();
   };
-
   // on click of add button in add transaction modal card 2
-  const handleAddTransactionButtonClick = () => {
-    if (!transactionToAdd || isNaN(transactionToAdd)) {
-      console.log("Invalid transaction");
-      return;
-    }
-    const amount = parseFloat(transactionToAdd);
-    if (currentBalance < amount) {
-      console.log(
-        "Insufficient balance, Cannot Spent more than current balance"
-      );
-      return;
-    }
+const handleAddTransactionButtonClick = () => {
 
-    axios
-      .post(
-        "http://localhost:4000/transaction/create",
-        {
-          amount,
-          transactionDate: new Date(),
-          description: descriptionToAdd,
+  if (!transactionToAdd || isNaN(transactionToAdd)) {
+    console.log("Invalid transaction");
+    return;
+  }
+  const amount = parseFloat(transactionToAdd);
+  if (currentBalance < amount) {
+    console.log("Insufficient balance, Cannot spend more than current balance");
+    return;
+  }
+  // debugger;
+  axios
+    .post(
+      "http://localhost:4000/transaction/create",
+      {
+        amount,
+        transactionDate: dateToAdd,
+        description: descriptionToAdd,
+      },
+      {
+        headers: {
+          Authorization: jwtToken,
         },
-        {
-          headers: {
-            Authorization: jwtToken,
-          },
-        }
-      )
-      .catch((e) => console.log(e));
+      }
+    )
+    .then(() => {
+      const newBalance = currentBalance - amount;
+      setCurrentBalance(newBalance);
+      setAmountSpent(amountSpent + amount);
+      setTransactionToAdd("");
+      setDescriptionToAdd("");
+      setDateToAdd(new Date());
+      closeAddTransactionModal();
+      setShowSpentDropdown(false);
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+    });
+};
 
-    const newBalance = currentBalance - amount;
 
-    // setTransactions([...transactions, newTransaction]);
-    setDescriptionToAdd(descriptionToAdd)
-    setCurrentBalance(newBalance);
-    setAmountSpent(amountSpent + amount);
-    setTransactionToAdd("");
-    setDescriptionToAdd("");
-    closeAddTransactionModal();
-    setShowSpentDropdown(false);
-  };
 
   // on click of remove button in remove transaction modal card 2
   const handleRemoveTransactionButtonClick = () => {
@@ -276,24 +296,24 @@ const Dashboard = () => {
       {
         data: [amountSpent, currentBalance],
         backgroundColor: ["#F87171", "#60A5FA"],
-        hoverBackgroundColor: ["#F87171", "#60A5FA"]
-      }
-    ]
+        hoverBackgroundColor: ["#F87171", "#60A5FA"],
+      },
+    ],
   };
 
   const pieChartOptions = {
     elements: {
       arc: {
-        borderWidth: 0
-      }
+        borderWidth: 0,
+      },
     },
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "bottom"
-      }
-    }
+        position: "bottom",
+      },
+    },
   };
 
   return (
@@ -468,7 +488,9 @@ const Dashboard = () => {
         handleTransactionChange={handleTransactionChange}
         transactionToAdd={transactionToAdd}
         descriptionToAdd={descriptionToAdd}
-        handleDescriptionChange = {handleDescriptionChange}
+        dateToAdd={dateToAdd}
+        handleDescriptionChange={handleDescriptionChange}
+        handleDateChange={handleDateChange}
         handleAddTransactionButtonClick={handleAddTransactionButtonClick}
       />
 

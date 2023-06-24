@@ -13,49 +13,56 @@ import {
   MDBTypography,
 } from "mdb-react-ui-kit";
 import { FaRupeeSign } from "react-icons/fa";
-import { AuthContext } from "../../contexts/authContextProvider";
-import Navbar from "../Navbar/NavBar";
+import { AuthContext } from "../contexts/authContextProvider";
+import Navbar from "./Navbar/NavBar";
+import { useLocation } from "react-router-dom";
 
 export default function ProfileStatistics() {
   const { user, jwtToken } = useContext(AuthContext);
-  const [totaltransactions, setTotaltransaction] = useState(0);
+  const [totalTransactions, setTotalTransactions] = useState(0);
   const [currentBalance, setCurrentBalance] = useState(0);
-  const [oneyeartransactiondata, setOneyeartransactiondata] = useState(0)
+  const [oneyearTransactiondata, setOneYearTransactionData] = useState(0);
+  const location = useLocation();
 
-  useEffect(() => {
-    if (jwtToken) {
-      console.log(jwtToken);
-      axios
-        .get("http://localhost:4000/user", {
-          headers: {
-            Authorization: jwtToken,
-          },
-        })
-        .then((res) => {
-          setCurrentBalance(res.data.user.currentBalance);
-          setTotaltransaction(res.data.transactions.transactions.length)
-          console.log(res.data, "meoeww")
-        })
-        .catch((e) => console.log(e));
-    }
-  }, [jwtToken]);
+useEffect(() => {
+  if (jwtToken) {
+    axios
+      .get("http://localhost:4000/user", {
+        headers: {
+          Authorization: jwtToken,
+        },
+      })
+      .then((res) => {
+        setCurrentBalance(res.data.user.currentBalance);
+        setTotalTransactions(res.data.transactions.transactions.length);
+        console.log(res.data, "meow");
 
-  useEffect(() => {
-    if (jwtToken) {
-      // console.log(jwtToken);
-      axios
-        .get("http://localhost:4000/user/lastyeartransactions", {
-          headers: {
-            Authorization: jwtToken,
-          },
-        })
-        .then((res) => {
-          setOneyeartransactiondata(res.data.transactions.transactions)
-          console.log(res.data, "transaction data");
-        })
-        .catch((e) => console.log(e));
-    }
-  }, [jwtToken]);
+        return lastYearTransactions(res.data.transactions.transactions);
+      })
+      .then((res) => {
+        setOneYearTransactionData(res);
+      })
+      .catch((e) => console.log(e));
+  }
+}, [jwtToken, location]);
+
+
+const lastYearTransactions = async (transactions) => {
+  const currentDate = new Date();
+  const lastMonth = currentDate.getMonth() - 1; // Get the month index of the last month
+  // console.log(transactions, lastMonth,"transactions")
+  const lastMonthTransactions = transactions.filter((transaction) => {
+    const transactionDate = new Date(transaction.transactionDate);
+    return transactionDate.getMonth() === lastMonth;
+  });
+
+  const totalAmount = lastMonthTransactions.reduce((sum, transaction) => {
+    return sum + transaction.amount;
+  }, 0);
+  return totalAmount;
+};
+
+
 
   return (
     <>
@@ -90,7 +97,7 @@ export default function ProfileStatistics() {
                     <div className="d-flex align-items-center">
                       <FaRupeeSign className="mr-2" />
                       <MDBCardText className="mb-1 h5">
-                        {user.currency} {user ? currentBalance : 0 }
+                        {user.currency} {currentBalance || 0}
                       </MDBCardText>
                     </div>
                     <MDBCardText className="small text-muted mb-0 text-center">
@@ -106,15 +113,15 @@ export default function ProfileStatistics() {
                   <div className="d-flex justify-content-between text-center mt-3">
                     <div>
                       <MDBCardText className="mb-1 h5">
-                        {user.lastMonthTransaction || 0}
+                        {user ? oneyearTransactiondata : 0}
                       </MDBCardText>
                       <MDBCardText className="small text-muted mb-0">
-                        Last Month's Transactions
+                        Last Year's Transactions
                       </MDBCardText>
                     </div>
                     <div>
                       <MDBCardText className="mb-1 h5">
-                        {user.totalTransactions || 0}
+                        {totalTransactions || 0}
                       </MDBCardText>
                       <MDBCardText className="small text-muted mb-0">
                         Total Transactions

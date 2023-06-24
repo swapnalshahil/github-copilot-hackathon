@@ -14,7 +14,7 @@ const loginUser = async (req, res) => {
     const jwtSecret = process.env.JWT_SECRET || "secret";
     const userExist = await findUserByEmail(email);
     if (!userExist) {
-      createNewUser({ email });
+      await createNewUser({ email });
     }
     const token = jwt.sign(
       {
@@ -34,10 +34,11 @@ const loginUser = async (req, res) => {
 
 const getLastYearDetails = async (req, res) => {
   try {
-    let email = req.user.email;
     let user = await findUserByEmail(email);
+    let email = req?.user.email;
     let allTransactions = await getUserTransactions(user._id);
     allTransactions = allTransactions.transactions;
+    // console.log("allTransactions", allTransactions);
     const presentDate = new Date();
     const currentYearTransactions = allTransactions.filter(
       (currentTransaction) => {
@@ -48,6 +49,7 @@ const getLastYearDetails = async (req, res) => {
         return timeDifference < 365;
       }
     );
+    // console.log("monthWiseTransactionsDetail", currentYearTransactions);
     const monthWiseTransactionsDetail = currentYearTransactions.reduce(
       (reducer, currentTransaction) => {
         const currentTransactionMonth =
@@ -59,6 +61,7 @@ const getLastYearDetails = async (req, res) => {
       },
       {}
     );
+    // console.log("monthWiseTransactionsDetail", currentYearTransactions);
     res.status(200).json({ monthWiseDetail: monthWiseTransactionsDetail });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -68,11 +71,12 @@ const getLastYearDetails = async (req, res) => {
 // to update the user balance, alter amount (+/-) to increase/decrease the balance
 const updateBalance = async (req, res) => {
   try {
+    let _user = await findUserByEmail(email);
     let email = req.user.email;
     let amount = req.body.amount;
-    let user = await findUserByEmail(email);
+    
     let details = { currentBalance: amount };
-    user = await updateUserDetails(user, details);
+    user = await updateUserDetails(_user, details);
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });

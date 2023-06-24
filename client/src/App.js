@@ -2,7 +2,7 @@
 import './App.css';
 import Login from './components/Login';
 import Welcomepage from './components/LandingPage';
-import Profile from './components/Profile/Profile';
+import Profile from './components/Profile';
 import Bargraphs from './components/Charts/Bargraphs';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LandinPage from './components/LandingPage';
