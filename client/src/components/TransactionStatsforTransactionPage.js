@@ -9,7 +9,7 @@ const TransactionStats = () => {
   const [sortOption, setSortOption] = useState("none");
 
   const { user, jwtToken } = useContext(AuthContext);
-  console.log(user)
+  // console.log(user)
   useEffect(() => {
     if(jwtToken){
       //api update need to be done

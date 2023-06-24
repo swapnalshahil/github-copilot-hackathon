@@ -49,6 +49,7 @@ const TransactionList = () => {
               <tr
                 className="cursor-pointer bg-white hover:bg-gray-100"
                 onClick={() => handleTransactionClick(transaction.id)}
+                key={transaction.id}
               >
                 <td className="border px-4 py-2">{transaction.transactionDate}</td>
                 <td className="border px-4 py-2">{transaction.description}</td>
