@@ -81,7 +81,7 @@ const lastYearTransactions = async (transactions) => {
                 <MDBCardBody className="text-center items-center">
                   <div className="mt-3 mb-4 d-flex justify-content-center align-items-center">
                     <MDBCardImage
-                      src={user.picture}
+                      src={user?.picture}
                       className="rounded-circle"
                       fluid
                       style={{ width: "100px" }}
@@ -116,7 +116,7 @@ const lastYearTransactions = async (transactions) => {
                         {user ? oneyearTransactiondata : 0}
                       </MDBCardText>
                       <MDBCardText className="small text-muted mb-0">
-                        Last Year's Transactions
+                        Last Month Transactions
                       </MDBCardText>
                     </div>
                     <div>
