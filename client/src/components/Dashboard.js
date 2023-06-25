@@ -56,21 +56,7 @@ const Dashboard = () => {
     }
   }, [jwtToken, location]);
 
-  useEffect(() => {
-    if (jwtToken) {
-      axios
-        .put(
-          "http://localhost:4000/user/balance",
-          { amount: currentBalance },
-          {
-            headers: {
-              Authorization: jwtToken,
-            },
-          }
-        )
-        .catch((e) => console.log(e));
-    }
-  }, [jwtToken, location, currentBalance]);
+
 
   // for add amount toggle
   const handleDropdownToggle = () => {
@@ -85,7 +71,7 @@ const Dashboard = () => {
  const handleAddAmount = (amount) => {
    let newBalance = currentBalance + parseFloat(amount);
    console.log(newBalance, "newBalance");
-  //  setCurrentBalance(newBalance);
+   setCurrentBalance(newBalance);
 
    // Make API request to update the balance in the database
    axios
@@ -98,6 +84,24 @@ const Dashboard = () => {
          },
        }
      )
+     .then((res) => {
+      amount = parseFloat(amount)
+      
+      // debugger;
+      axios.post(
+        "http://localhost:4000/transaction/create",
+        {
+          amount,
+          transactionDate: new Date(),
+          description: "Amount added",
+        },
+        {
+          headers: {
+            Authorization: jwtToken,
+          },
+        }
+      );
+     })
      .then((res) => {
        setCurrentBalance(newBalance);
      })
@@ -112,7 +116,8 @@ const Dashboard = () => {
  // remove amount from current balance card 1
  const handleRemoveAmount = (amount) => {
    let newBalance = currentBalance - parseFloat(amount);
-  //  setCurrentBalance(newBalance);
+   const removeamount = parseFloat(amount)
+   setCurrentBalance(newBalance);
 
    // Make API request to update the balance in the database
    axios
@@ -126,7 +131,26 @@ const Dashboard = () => {
        }
      )
      .then((res) => {
-        setCurrentBalance(newBalance);
+      //  const amount = parseFloat(removeamount);
+      amount = parseFloat(amount)
+
+       // debugger;
+       axios.post(
+         "http://localhost:4000/transaction/create",
+         {
+           amount,
+           transactionDate: new Date(),
+           description: "Amount removed",
+         },
+         {
+           headers: {
+             Authorization: jwtToken,
+           },
+         }
+       );
+     })
+     .then((res) => {
+       setCurrentBalance(newBalance);
      })
      .then((response) => {
        console.log("Balance updated in the database");
@@ -147,8 +171,27 @@ const Dashboard = () => {
     } else {
       const newBalance = currentBalance - parseFloat(amount);
       let newAmountSpent = amountSpent + parseFloat(amount);
-      setAmountSpent(newAmountSpent);
+      
       setCurrentBalance(newBalance);
+      axios
+        .put(
+          "http://localhost:4000/user/balance",
+          { amount: newBalance },
+          {
+            headers: {
+              Authorization: jwtToken,
+            },
+          }
+        )
+        .then((res) => {
+          setAmountSpent(newAmountSpent);
+          
+        }).then((newBalance) => {
+          setCurrentBalance(newBalance);
+        })
+        .catch((error) => {
+          console.log("Error updating balance:", error);
+        });
     }
   };
   // remove transaction from spent balance card 2
@@ -160,8 +203,27 @@ const Dashboard = () => {
       return;
     } else {
       const newBalance = currentBalance + parseFloat(amount);
-      setAmountSpent(amountSpent - parseFloat(amount));
-      setCurrentBalance(newBalance);
+      
+      
+      axios
+        .put(
+          "http://localhost:4000/user/balance",
+          { amount: newBalance },
+          {
+            headers: {
+              Authorization: jwtToken,
+            },
+          }
+        )
+        .then((res) => {
+          setAmountSpent(amountSpent - parseFloat(amount));
+          
+        }).then((newBalance) => {
+          setCurrentBalance(newBalance);
+        })
+        .catch((error) => {
+          console.log("Error updating balance:", error);
+        });
     }
   };
 
@@ -301,6 +363,25 @@ const handleAddTransactionButtonClick = () => {
         },
       }
     )
+    .then((res) => {
+      const newBalance = currentBalance - amount;
+      axios
+        .put(
+          "http://localhost:4000/user/balance",
+          { amount: newBalance },
+          {
+            headers: {
+              Authorization: jwtToken,
+            },
+          }
+        )
+        .then((res) => {
+          setCurrentBalance(newBalance);
+        })
+        .catch((error) => {
+          console.log("Error updating balance:", error);
+        });
+    })
     .then(() => {
       const newBalance = currentBalance - amount;
       // debugger;

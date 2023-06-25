@@ -44,7 +44,13 @@ const TransactionStats = () => {
   const filteredTransactions =
     filterType === "all"
       ? transactions
-      : transactions.filter((transaction) => transaction.type === filterType);
+      : transactions.filter((transaction) => {
+        if(filterType === "Amount added"){
+          return transaction.description === "Amount added";
+        }else{
+          return transaction.description !== "Amount added";
+        }
+      });
 
   const sortedTransactions = () => {
     switch (sortOption) {
@@ -58,7 +64,7 @@ const TransactionStats = () => {
         );
       case "dateDesc":
         return filteredTransactions.sort(
-          (a, b) => new Date(b.date) - new Date(a.date)
+          (a, b) => -(new Date(a.date) - new Date(b.date))
         );
       default:
         return filteredTransactions;
@@ -86,7 +92,7 @@ const TransactionStats = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Transaction Page</h1>
       <div className="flex items-center mb-4">
-        {/* <label htmlFor="filter" className="mr-2">
+        <label htmlFor="filter" className="mr-2">
           Filter:
         </label>
         <select
@@ -96,9 +102,9 @@ const TransactionStats = () => {
           onChange={handleFilterChange}
         >
           <option value="all">All</option>
-          <option value="add">Add</option>
-          <option value="subtract">Subtract</option>
-        </select> */}
+          <option value="Amount added">Added</option>
+          <option value="subtract">Expense</option>
+        </select>
         <label htmlFor="sort" className="ml-4 mr-2">
           Sort By:
         </label>
@@ -127,14 +133,17 @@ const TransactionStats = () => {
             {/* Transaction details */}
             <div className="flex justify-between">
               <div className="font-bold">
-                {formatDate(transaction.transactionDate)} - {transaction.description}
+                {formatDate(transaction.transactionDate)} -{" "}
+                {transaction.description}
               </div>
               <div
                 className={`${
-                  transaction.type === "add" ? "text-green-500" : "text-red-500"
+                  transaction.description === "Amount added"
+                    ? "text-green-500"
+                    : "text-red-500"
                 }`}
               >
-                {transaction.type === "add" ? "+" : "-"}
+                {transaction.description === "Amount added" ? "+" : "-"}
                 {formatCurrency(transaction.amount, transaction.currency)}
               </div>
             </div>
